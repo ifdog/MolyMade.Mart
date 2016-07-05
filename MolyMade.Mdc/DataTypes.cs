@@ -6,7 +6,11 @@ using System.Threading.Tasks;
 
 namespace MolyMade.Mdc
 {
-    public class Class1
+    public enum MachineTypes
     {
+        Opc = 1,
+        Modbus = 2,
+        Other = 4,
+        Other2 = 8
     }
 }
