@@ -9,7 +9,7 @@ namespace MolyMade.Mdc
 {
     public abstract class Machine:IDisposable
     {
-        protected Machine(string name, int id, string path, int failures, MachineTypes type, Dictionary<string, string> tags)
+        protected Machine(string name, int id, string path, MachineTypes type, Dictionary<string, string> tags)
         {
             this.Name = name;
             this.Id = id;
@@ -17,36 +17,54 @@ namespace MolyMade.Mdc
             this.LastConnected = -1;
             this.LastRead = -1;
             this.Path = path;
-            this.Failures = failures;
+            this.Failures = 0;
             this.Type = type;
             this.Tags = tags;
             this.Buffer = new Dictionary<string, string>();
         }
 
-        public string Name { get; }
-        public int Id { get; }
-        public string Path { get; }
-        public bool IsConnected { get; }
-        public long LastConnected { get; }
-        public long LastRead { get; }
-        public int Failures { get; }
-        public MachineTypes Type { get; }
-        public Dictionary<string,string> Tags { get; }
-        public Dictionary<string,string> Buffer { get; }
+        public string Name { get; protected set; }
+        public int Id { get; protected set; }
+        public string Path { get; protected set; }
+        public bool IsConnected { get; protected set; }
+        public long LastConnected { get; protected set; }
+        public long LastRead { get; protected set; }
+        public int Failures { get; protected set; }
+        public MachineTypes Type { get; protected set; }
+        public Dictionary<string,string> Tags { get; protected set; }
+        public Dictionary<string,string> Buffer { get; protected set; }
+        public MachineState State { get; protected set; }
+        public List<string> Logs { get; protected set; }
 
-        public virtual bool Connect()
+        public virtual void Connect()
         {
             throw new NotImplementedException();
         }
 
-        public virtual bool Disconnect()
+        public virtual void Disconnect()
         {
             throw new NotImplementedException();
         }
 
-        public virtual Dictionary<string, string> Read()
+        public virtual void Read()
         {
             throw new NotImplementedException();
+        }
+
+        protected virtual void Log(string s)
+        {
+            if (Logs.Count > 100)
+            {
+                Logs.RemoveAt(0);
+            }
+            Logs.Add(s);
+        }
+
+        public virtual string[] ReadLog()
+        {
+            string[] _logArray = Logs.ToArray();
+            Logs.Clear();
+            return _logArray;
         }
 
         public virtual void Dispose()
