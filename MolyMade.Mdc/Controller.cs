@@ -20,6 +20,7 @@ namespace MolyMade.Mdc
         {
             var x = System.Configuration.ConfigurationManager.AppSettings["NewKey0"];
             int a = 1;
+
         }
     }
 }
