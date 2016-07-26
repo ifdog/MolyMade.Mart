@@ -39,6 +39,10 @@
       <HintPath>..\packages\Common.Logging.Core.3.3.0\lib\net40\Common.Logging.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="INIFileParser, Version=2.3.0.0, Culture=neutral, PublicKeyToken=79af7b307b65cf3c, processorArchitecture=MSIL">
+      <HintPath>..\packages\ini-parser.2.3.0\lib\net20\INIFileParser.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.configuration" />
     <Reference Include="System.Core" />
@@ -56,6 +60,7 @@
   <ItemGroup>
     <Compile Include="ActiveWorker.cs" />
     <Compile Include="Collector.cs" />
+    <Compile Include="Configurer.cs" />
     <Compile Include="Controller.cs" />
     <Compile Include="DataTypes.cs" />
     <Compile Include="Machine.cs" />
