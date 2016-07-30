@@ -10,18 +10,24 @@ namespace MolyMade.Mdc
 {
     public class Configurer:IDisposable
     {
-        internal IniData IniData;
-        public string iniPath { get; internal set; }
-        public string[] ServerStrings { get; internal set; }
-        public Configurer(string iniPath)
+        internal IniData SysIni;
+        internal IniData ServersIni;
+        public string SysIniPath { get; internal set; }
+        public string ServerIniPath { get; internal set; }
+        
+        public Configurer(string sysIniPath,string ServerIniPath)
         {
-            this.iniPath= iniPath;
+            this.SysIniPath = sysIniPath;
+            this.ServerIniPath = ServerIniPath;
         }
 
         public void Load()
         {
             FileIniDataParser parser = new FileIniDataParser();
-            IniData = parser.ReadFile(this.iniPath);
+            SysIni = parser.ReadFile(this.SysIniPath);
+            ServersIni = parser.ReadFile(this.ServerIniPath);
+            
+            int i = 0;
         }
 
 

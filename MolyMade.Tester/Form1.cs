@@ -23,5 +23,11 @@ namespace MolyMade.Tester
             MolyMade.Mdc.Controller c = new Controller();
             c.ReadConfig();
         }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            MolyMade.Mdc.Configurer c = new Configurer("Mart.ini","Servers.ini");
+               c.Load();
+        }
     }
 }
