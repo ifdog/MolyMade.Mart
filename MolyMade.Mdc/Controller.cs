@@ -11,16 +11,17 @@ namespace MolyMade.Mdc
     public class Controller
     {
         private Hashtable OpcMachines;
+        private Configurer.ConfigurationData configurationData;
         public Controller()
         {
             
         }
 
-        public void ReadConfig()
+        public void init()
         {
-            var x = System.Configuration.ConfigurationManager.AppSettings["NewKey0"];
-            int a = 1;
-
+            Configurer c = new Configurer("Mart.ini", "Servers.ini");
+            configurationData = c.Load();
         }
+        
     }
 }
