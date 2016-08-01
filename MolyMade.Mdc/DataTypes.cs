@@ -6,6 +6,12 @@ using System.Threading.Tasks;
 
 namespace MolyMade.Mdc
 {
+    public struct MessageItem
+    {
+        public string owner;
+        public string message;
+    }
+
     public enum MachineTypes
     {
         Opc = 1,

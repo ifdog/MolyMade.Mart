@@ -36,6 +36,17 @@ namespace MolyMade.Mdc
         public MachineState State { get; protected set; }
         public List<string> Logs { get; protected set; }
 
+        public static Machine CreateInstance(string name, int id, string path, MachineTypes type, Dictionary<string, string> tags)
+        {
+            switch (type)
+            {
+                case MachineTypes.Opc:
+                    return new OpcMachine(name,id,path,type,tags);
+                default:
+                    return null;
+            }
+        }
+
         public virtual void Connect()
         {
             throw new NotImplementedException();
