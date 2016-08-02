@@ -8,7 +8,7 @@ using System.Threading;
 using System.Threading.Tasks;
 
 
-namespace MolyMade.Mdc
+namespace MolyMade.FieldCommunication
 {
     class Producer
     {

@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MolyMade.Mdc
+namespace MolyMade.FieldCommunication
 {
     public class Controller
     {
@@ -19,7 +19,7 @@ namespace MolyMade.Mdc
 
         public void init()
         {
-            Configurer c = new Configurer("Mart.ini", "Servers.ini");
+            Configurer c = new Configurer();
             configurationData = c.Load();
         }
         

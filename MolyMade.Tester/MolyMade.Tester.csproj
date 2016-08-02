@@ -82,9 +82,9 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\MolyMade.Mdc\MolyMade.Mdc.csproj">
+    <ProjectReference Include="..\MolyMade.Mdc\MolyMade.FieldCommunication.csproj">
       <Project>{f9a7119c-4590-4dba-8a9c-ca464afe6b4e}</Project>
-      <Name>MolyMade.Mdc</Name>
+      <Name>MolyMade.FieldCommunication</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

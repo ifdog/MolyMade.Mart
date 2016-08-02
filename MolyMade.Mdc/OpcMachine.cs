@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using TitaniumAS.Opc.Client.Da;
 using  TitaniumAS.Opc.Client.Common;
 
-namespace MolyMade.Mdc
+namespace MolyMade.FieldCommunication
 {
     class OpcMachine:Machine
     {

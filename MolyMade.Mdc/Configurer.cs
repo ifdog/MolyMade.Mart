@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using IniParser;
 using IniParser.Model;
 
-namespace MolyMade.Mdc
+namespace MolyMade.FieldCommunication
 {
     public class Configurer:IDisposable
     {
@@ -21,10 +21,10 @@ namespace MolyMade.Mdc
             public Dictionary<string, Dictionary<string, string>> Servers;
         }
         
-        public Configurer(string sysIniPath,string ServerIniPath)
+        public Configurer(string sysIniPath = "Mart.ini",string serverIniPath="Servers.ini")
         {
             this.SysIniPath = sysIniPath;
-            this.ServerIniPath = ServerIniPath;
+            this.ServerIniPath = serverIniPath;
             this.Configuration = new ConfigurationData();
         }
 

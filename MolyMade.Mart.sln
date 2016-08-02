@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.25123.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MolyMade.Mdc", "MolyMade.Mdc\MolyMade.Mdc.csproj", "{F9A7119C-4590-4DBA-8A9C-CA464AFE6B4E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MolyMade.FieldCommunication", "MolyMade.Mdc\MolyMade.FieldCommunication.csproj", "{F9A7119C-4590-4DBA-8A9C-CA464AFE6B4E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MolyMade.Tester", "MolyMade.Tester\MolyMade.Tester.csproj", "{8002BA11-0F98-408B-9230-9664A91B2C86}"
 EndProject

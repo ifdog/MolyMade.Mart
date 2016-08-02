@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using MolyMade.Mdc;
+using MolyMade.FieldCommunication;
 
 namespace MolyMade.Tester
 {
@@ -20,13 +20,11 @@ namespace MolyMade.Tester
 
         private void button1_Click(object sender, EventArgs e)
         {
-            MolyMade.Mdc.Controller c = new Controller();
-            c.ReadConfig();
         }
 
         private void button2_Click(object sender, EventArgs e)
         {
-            MolyMade.Mdc.Configurer c = new Configurer("Mart.ini","Servers.ini");
+            MolyMade.FieldCommunication.Configurer c = new Configurer();
                c.Load();
         }
     }

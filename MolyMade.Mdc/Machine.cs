@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace MolyMade.Mdc
+namespace MolyMade.FieldCommunication
 {
     public abstract class Machine:IDisposable
     {
