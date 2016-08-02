@@ -37,10 +37,18 @@ namespace MolyMade.FieldCommunication
             _producer = new Producer(configurationData.Machines,_valuesQueue,_messageQueue,ref runningtag);
         }
 
-        public void start()
+        public void Start()
+        {
+            init();
+            StartProducer();
+            StartCollector();
+        }
+
+        public void StartProducer()
         {
             _producer.Start();
         }
+
         private void StartCollector(int collectorThreads = 1)
         {
             bool[] threads = new bool[collectorThreads];

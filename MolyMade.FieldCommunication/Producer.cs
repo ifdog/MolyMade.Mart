@@ -14,7 +14,7 @@ namespace MolyMade.FieldCommunication
     {
         private Dictionary<string, Dictionary<string, string>> _MachinesDefinition;
         private BlockingCollection<Machine> _quietQueue = new BlockingCollection<Machine>(new ConcurrentQueue<Machine>(),byte.MaxValue);
-        private BlockingCollection<Machine> _activeQueue = new BlockingCollection<Machine>(new ConcurrentQueue<Machine>(),byte.MaxValue));
+        private BlockingCollection<Machine> _activeQueue = new BlockingCollection<Machine>(new ConcurrentQueue<Machine>(),byte.MaxValue);
         private BlockingCollection<MessageItem> _messageQueue;
         private BlockingCollection<Dictionary<string,string>> _valuesQueue;
         private readonly int _quietThreads;

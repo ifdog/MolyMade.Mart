@@ -53,7 +53,7 @@ namespace MolyMade.FieldCommunication
                 }
                 tmpserverDictionary[section.SectionName.Trim()] = tmpDictionary;
             }
-            Configuration.Servers = tmpserverDictionary;
+            Configuration.Machines = tmpserverDictionary;
             return this.Configuration;
         }
 
