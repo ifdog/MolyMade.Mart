@@ -17,7 +17,7 @@ namespace MolyMade.FieldCommunication
         public struct ConfigurationData
         {
             public Dictionary<string, Dictionary<string,string>> System;
-            public Dictionary<string, Dictionary<string, string>> Servers;
+            public Dictionary<string, Dictionary<string, string>> Machines;
         }
         
         public Configurer(string sysIniPath = "Mart.ini",string serverIniPath="Machines.ini")

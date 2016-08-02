@@ -4,6 +4,8 @@ using System.Collections.Generic;
 
 namespace MolyMade.FieldCommunication
 {
+    public delegate void CollectorCallback(List<Dictionary<string, string>> valuesList);
+
     public struct MessageItem
     {
         public string owner;
