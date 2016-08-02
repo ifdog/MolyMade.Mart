@@ -41,25 +41,22 @@ namespace MolyMade.FieldCommunication
             {
                 case MachineTypes.Opc:
                     return new OpcMachine(name,id,path,type,tags);
+                case MachineTypes.Modbus:
+                    return null;
+                case MachineTypes.Other:
+                    return null;
+                case MachineTypes.Other2:
+                    return null;
                 default:
                     return null;
             }
         }
 
-        public virtual void Connect()
-        {
-            throw new NotImplementedException();
-        }
+        public virtual void Connect(){}
 
-        public virtual void Disconnect()
-        {
-            throw new NotImplementedException();
-        }
+        public virtual void Disconnect(){}
 
-        public virtual void Read()
-        {
-            throw new NotImplementedException();
-        }
+        public virtual void Read(){}
 
         protected virtual void Log(string s)
         {
@@ -77,9 +74,6 @@ namespace MolyMade.FieldCommunication
             return _logArray;
         }
 
-        public virtual void Dispose()
-        {
-            throw new NotImplementedException();
-        }
+        public virtual void Dispose(){}
     }
 }

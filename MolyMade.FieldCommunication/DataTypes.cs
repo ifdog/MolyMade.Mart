@@ -14,8 +14,8 @@ namespace MolyMade.FieldCommunication
     {
         Opc = 1,
         Modbus = 2,
-        Other = 4,
-        Other2 = 8
+        Other = 3,
+        Other2 = 4
     }
 
     public enum MachineState

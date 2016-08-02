@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MolyMade.FieldCommunication
 {
-    class Tools
+    static class Tools
     {
         public static long GetUnixTimeStamp()
         {
@@ -16,25 +16,20 @@ namespace MolyMade.FieldCommunication
 
         public static class MachineId
         {
-            private static int mem;
+            private static int _mem;
              static MachineId()
              {
-                 mem = 0;
+                 _mem = 0;
              }
-
             public static int Create()
             {
-                if (mem > 99999)
-                {
-                    mem = 0;
-                }
-                mem++;
-                return mem;
+                if (_mem > 99999) { _mem = 0;}
+                _mem++;
+                return _mem;
             }
-
             public static void Reset()
             {
-                mem = 0;
+                _mem = 0;
             }
         }
     }

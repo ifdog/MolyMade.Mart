@@ -20,7 +20,7 @@ namespace MolyMade.FieldCommunication
             public Dictionary<string, Dictionary<string, string>> Servers;
         }
         
-        public Configurer(string sysIniPath = "Mart.ini",string serverIniPath="Servers.ini")
+        public Configurer(string sysIniPath = "Mart.ini",string serverIniPath="Machines.ini")
         {
             this.SysIniPath = sysIniPath;
             this.ServerIniPath = serverIniPath;
@@ -38,7 +38,7 @@ namespace MolyMade.FieldCommunication
                 Dictionary<string,string> tmpDictionary = new Dictionary<string, string>();
                 foreach (KeyData key in section.Keys)
                 {
-                    tmpDictionary[key.KeyName] = key.Value;
+                    tmpDictionary[key.KeyName.Trim()] = key.Value.Trim();
                 }
                 tmpsysDictionary[section.SectionName] = tmpDictionary;
             }
@@ -49,9 +49,9 @@ namespace MolyMade.FieldCommunication
                 Dictionary<string,string> tmpDictionary = new Dictionary<string, string>();
                 foreach (KeyData key in section.Keys)
                 {
-                    tmpDictionary[key.KeyName] = key.Value;
+                    tmpDictionary[key.KeyName] = key.Value.Trim();
                 }
-                tmpserverDictionary[section.SectionName] = tmpDictionary;
+                tmpserverDictionary[section.SectionName.Trim()] = tmpDictionary;
             }
             Configuration.Servers = tmpserverDictionary;
             return this.Configuration;
