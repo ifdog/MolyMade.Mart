@@ -14,6 +14,7 @@ namespace MolyMade.FieldCommunication
         private OpcDaGroup _group;
         private readonly OpcDaItemDefinition[] _itemDefinitions;
         private OpcDaItemValue[] _itemValues;
+        public new bool IsConnected => _server.IsConnected;
 
         public OpcMachine(string name, int id, string path, MachineTypes type,
             Dictionary<string, string> tags) : base(name, id, path, type, tags)
@@ -39,19 +40,16 @@ namespace MolyMade.FieldCommunication
             try
             {
                 _server.Connect();
-                IsConnected = _server.IsConnected;
                 _group = _server.AddGroup("MolyMadeGroup");
                 _group.IsActive = true;
                 _group.AddItems(_itemDefinitions);
                 this.State = MachineState.Connected;
-                this.IsConnected = true;
                 this.LastConnected = Tools.GetUnixTimeStamp();
                 Failures = 0;
             }
             catch (Exception e)
             {
                 this.State= MachineState.FailToConnect;
-                this.IsConnected = false;
                 if (Failures < 999)
                 {
                     Failures ++;
@@ -84,7 +82,6 @@ namespace MolyMade.FieldCommunication
         {
             _server.Disconnect();
             this.State = MachineState.Disconnected;
-            this.IsConnected = false;
         }
 
         public override void Dispose()

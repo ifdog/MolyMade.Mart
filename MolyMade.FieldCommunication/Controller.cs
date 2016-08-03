@@ -10,36 +10,37 @@ using System.Threading.Tasks;
 
 namespace MolyMade.FieldCommunication
 {
-    public class Controller
+    public class Controller:Ilog
     {
-        private Hashtable OpcMachines;
-        private Configurer.ConfigurationData configurationData;
-        private BlockingCollection<MessageItem>_messageQueue = 
+        private Configurer.ConfigurationData _configurationData;
+        private readonly BlockingCollection<MessageItem>_messageQueue = 
             new BlockingCollection<MessageItem>(new ConcurrentQueue<MessageItem>(),byte.MaxValue);
-
-        private BlockingCollection<Dictionary<string, string>> _valuesQueue;
+        private readonly BlockingCollection<Dictionary<string, string>> _valuesQueue = 
+            new BlockingCollection<Dictionary<string, string>>(new ConcurrentQueue<Dictionary<string, string>>(), byte.MaxValue);
         private Producer _producer;
         private RunningTag _runningtag;
         private Collector _collector;
         private CollectorCallback _collectorCallback;
+        public  BlockingCollection<MessageItem> MessageQueue => _messageQueue;
 
         public Controller(CollectorCallback callback,RunningTag running)
         {
             _collectorCallback = callback;
             _runningtag = running;
-            _valuesQueue = new BlockingCollection<Dictionary<string, string>>(new ConcurrentQueue<Dictionary<string, string>>(),byte.MaxValue);
+            Tools.Log(this,"Created");
         }
 
-        public void init()
+        public void Init()
         {
             Configurer c = new Configurer();
-            configurationData = c.Load();
-            _producer = new Producer(configurationData.Machines,_valuesQueue,_messageQueue, _runningtag);
+            _configurationData = c.Load();
+            _producer = new Producer(_configurationData.Machines,_valuesQueue,_messageQueue, _runningtag);
+            Tools.Log(this,"initlized");
         }
 
         public void Start()
         {
-            init();
+            Init();
             StartProducer();
             StartCollector();
         }
@@ -56,13 +57,14 @@ namespace MolyMade.FieldCommunication
             {
                 var collectorThread = new Thread(() =>
                 {
-                    _collector = new Collector(_valuesQueue,_collectorCallback, _runningtag);
+                    _collector = new Collector(_valuesQueue,_messageQueue,_collectorCallback, _runningtag,10);
                     _collector.start();
                 })
                 { IsBackground = true };
                 collectorThread.Start();
             }
         }
+
 
     }
 }
