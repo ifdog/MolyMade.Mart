@@ -13,14 +13,14 @@ namespace MolyMade.FieldCommunication
     {
         private readonly BlockingCollection<Machine> _blockingQuietQueue;
         private readonly BlockingCollection<Machine> _blockingActiveQueue;
-        private readonly BlockingCollection<Dictionary<string,string>> _blockingServerValuesQueue;
+        private readonly BlockingCollection<Dictionary<string,string>> _blockingValuesQueue;
         private readonly BlockingCollection<MessageItem> _messageQueue;
-        private bool _runningtag;
-        public ActiveWorker(BlockingCollection<Machine> blockingQuietQueue, BlockingCollection<Machine> blockingActiveQueue, BlockingCollection<Dictionary<string,string>> blockingServerValuesQueue, BlockingCollection<MessageItem> messageQueue,ref bool Running)
+        private RunningTag _runningtag;
+        public ActiveWorker(BlockingCollection<Machine> blockingQuietQueue, BlockingCollection<Machine> blockingActiveQueue, BlockingCollection<Dictionary<string,string>> blockingServerValuesQueue, BlockingCollection<MessageItem> messageQueue,RunningTag Running)
         {
             _blockingQuietQueue = blockingQuietQueue;
             _blockingActiveQueue = blockingActiveQueue;
-            _blockingServerValuesQueue = blockingServerValuesQueue;
+            _blockingValuesQueue = blockingServerValuesQueue;
             _messageQueue = messageQueue;
             _runningtag = Running;
         }
@@ -33,19 +33,20 @@ namespace MolyMade.FieldCommunication
 
         public void Start()
         {
-            while (_runningtag)
+            while (_runningtag.Value)
             {
                 Machine machine = _blockingActiveQueue.Take();
                 if (machine.IsConnected)
                 {
-                    _blockingServerValuesQueue.Add(MachineRead(machine));
+                    var x = MachineRead(machine);
+                    _blockingValuesQueue.Add(x);
                     _blockingActiveQueue.Add(machine);
                 }
                 else
                 {
                     _blockingQuietQueue.Add(machine);
                 }
-                Thread.Sleep(1000);
+                Thread.Sleep(100);
             }
         }
     }

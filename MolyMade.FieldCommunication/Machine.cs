@@ -20,6 +20,8 @@ namespace MolyMade.FieldCommunication
             this.Type = type;
             this.Tags = tags;
             this.Buffer = new Dictionary<string, string>();
+            this.Logs = new List<string>();
+
         }
 
         public string Name { get; protected set; }

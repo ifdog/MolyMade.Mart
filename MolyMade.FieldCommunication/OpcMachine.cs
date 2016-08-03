@@ -19,12 +19,12 @@ namespace MolyMade.FieldCommunication
             Dictionary<string, string> tags) : base(name, id, path, type, tags)
         {
             //path:"PCU50|OPC.SINUMERIK.Machineswitch"
-            string[] urlStrings = path.Split('|');
+            string[] urlStrings = path.Split('@');
             if (urlStrings.Length != 2)
             {
                 throw new ArgumentException($"Invaild path string :{path}");
             }
-            this._url = UrlBuilder.Build(urlStrings[1], urlStrings[0]);
+            this._url = UrlBuilder.Build(urlStrings[0], urlStrings[1]);
             _server = new OpcDaServer(this._url);
             _itemDefinitions = tags.Keys.Select(i => new OpcDaItemDefinition()
             {

@@ -6,6 +6,11 @@ namespace MolyMade.FieldCommunication
 {
     public delegate void CollectorCallback(List<Dictionary<string, string>> valuesList);
 
+    public class RunningTag
+    {
+        public bool Value;
+    }
+
     public struct MessageItem
     {
         public string owner;

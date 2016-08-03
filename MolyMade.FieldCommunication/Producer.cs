@@ -19,12 +19,12 @@ namespace MolyMade.FieldCommunication
         private BlockingCollection<Dictionary<string,string>> _valuesQueue;
         private readonly int _quietThreads;
         private readonly int _activeThreads;
-        private bool runningtag;
+        private RunningTag _runningtag;
         public Producer(
             Dictionary<string,Dictionary<string,string>> machines,
             BlockingCollection<Dictionary<string,string>> valuesQueue, 
             BlockingCollection<MessageItem> messageQueue,
-            ref bool running,
+            RunningTag running,
             int QuietThreads = 1, 
             int ActiveThreads = 1
           )
@@ -34,7 +34,7 @@ namespace MolyMade.FieldCommunication
             _messageQueue = messageQueue;
             _quietThreads = QuietThreads;
             _activeThreads = ActiveThreads;
-            runningtag = running;
+            _runningtag = running;
         }
 
         public void Start()
@@ -43,8 +43,8 @@ namespace MolyMade.FieldCommunication
             MachinesMake(_MachinesDefinition,machines);
             QueuesInit(machines,out _quietQueue,out _activeQueue);
 
-            QuietWorker qw = new QuietWorker(_quietQueue,_activeQueue,_messageQueue,ref runningtag);
-            ActiveWorker aw = new ActiveWorker(_quietQueue,_activeQueue,_valuesQueue,_messageQueue,ref runningtag);
+            QuietWorker qw = new QuietWorker(_quietQueue,_activeQueue,_messageQueue, _runningtag);
+            ActiveWorker aw = new ActiveWorker(_quietQueue,_activeQueue,_valuesQueue,_messageQueue, _runningtag);
    
             bool[] QuietThreads = new bool[_quietThreads];
             bool[] ActiveThreads = new bool[_activeThreads];
@@ -65,6 +65,7 @@ namespace MolyMade.FieldCommunication
         {
             foreach (string key in definitions.Keys)
             {
+                if (!Convert.ToBoolean(definitions[key]["Enable"])) { continue;}
                 Machine aMachine = Machine.CreateInstance(
                     key,
                     Tools.MachineId.Create(),

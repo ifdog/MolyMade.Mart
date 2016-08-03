@@ -17,24 +17,24 @@ namespace MolyMade.FieldCommunication
         private BlockingCollection<MessageItem>_messageQueue = 
             new BlockingCollection<MessageItem>(new ConcurrentQueue<MessageItem>(),byte.MaxValue);
 
-        private bool runningtag;
         private BlockingCollection<Dictionary<string, string>> _valuesQueue;
         private Producer _producer;
-        private bool _runningtag;
+        private RunningTag _runningtag;
         private Collector _collector;
         private CollectorCallback _collectorCallback;
 
-        public Controller(CollectorCallback callback,ref bool running)
+        public Controller(CollectorCallback callback,RunningTag running)
         {
             _collectorCallback = callback;
             _runningtag = running;
+            _valuesQueue = new BlockingCollection<Dictionary<string, string>>(new ConcurrentQueue<Dictionary<string, string>>(),byte.MaxValue);
         }
 
         public void init()
         {
             Configurer c = new Configurer();
             configurationData = c.Load();
-            _producer = new Producer(configurationData.Machines,_valuesQueue,_messageQueue,ref runningtag);
+            _producer = new Producer(configurationData.Machines,_valuesQueue,_messageQueue, _runningtag);
         }
 
         public void Start()
@@ -56,7 +56,7 @@ namespace MolyMade.FieldCommunication
             {
                 var collectorThread = new Thread(() =>
                 {
-                    _collector = new Collector(_valuesQueue,_collectorCallback,ref _runningtag);
+                    _collector = new Collector(_valuesQueue,_collectorCallback, _runningtag);
                     _collector.start();
                 })
                 { IsBackground = true };

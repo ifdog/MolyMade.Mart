@@ -11,22 +11,22 @@ namespace MolyMade.FieldCommunication
     class Collector
     {
         BlockingCollection<Dictionary<string, string>> _valuesQueue;
-        bool runningtag = true;
+        private RunningTag _runningtag;
         List<Dictionary<string,string>> _buffer = new List<Dictionary<string, string>>();
         private CollectorCallback _callback;
 
-        public Collector(BlockingCollection<Dictionary<string,string>> valuesQueue,CollectorCallback callback, ref bool running )
+        public Collector(BlockingCollection<Dictionary<string,string>> valuesQueue,CollectorCallback callback, RunningTag running )
         {
             _valuesQueue = valuesQueue;
-            runningtag = running;
+            _runningtag = running;
             _callback = callback;
         }
 
         public void start()
         {
-            while (runningtag)
+            while (_runningtag.Value)
             {
-                while (_buffer.Count < 100 && runningtag)
+                while (_buffer.Count < 10 && _runningtag.Value)
                 {
                     _buffer.Add(_valuesQueue.Take());
                 }

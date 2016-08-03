@@ -13,9 +13,9 @@ namespace MolyMade.FieldCommunication
         private readonly BlockingCollection<Machine> _blockqingQuietQueue;
         private readonly BlockingCollection<Machine> _blockingActiveQueue;
         private readonly BlockingCollection<MessageItem> _blockingMesageQueue;
-        private bool _runningtag;
+        private RunningTag _runningtag;
 
-        public QuietWorker(BlockingCollection<Machine> QuietQueue,BlockingCollection<Machine> ActiveQueue,BlockingCollection<MessageItem> MessageQueue,ref bool Running)
+        public QuietWorker(BlockingCollection<Machine> QuietQueue,BlockingCollection<Machine> ActiveQueue,BlockingCollection<MessageItem> MessageQueue,RunningTag Running)
         {
             _blockqingQuietQueue = QuietQueue;
             _blockingActiveQueue = ActiveQueue;
@@ -23,24 +23,31 @@ namespace MolyMade.FieldCommunication
             _runningtag = Running;
         }
 
-        public Machine MachineConnect(Machine machine)
+        public void MachineConnect(Machine machine)
         {
             if (!machine.IsConnected)
             {
                 machine.Connect();
             }
-            return machine;
         }
 
         public void Start()
             {
                 {
-                    while (_runningtag)
+                    while (_runningtag.Value)
                     {
-                    Machine machine = _blockqingQuietQueue.Take(); 
-                    _blockingActiveQueue.Add(MachineConnect(machine));
+                    Machine machine = _blockqingQuietQueue.Take();
+                        MachineConnect(machine);
+                        if (machine.IsConnected)
+                        {
+                            _blockingActiveQueue.Add(machine);
+                        }
+                        else
+                        {
+                            _blockqingQuietQueue.Add(machine);
+                        }
                     }
-                Thread.Sleep(1000);
+                Thread.Sleep(100);
                 }
         }
     }
