@@ -64,6 +64,7 @@
     <Compile Include="Controller.cs" />
     <Compile Include="DataTypes.cs" />
     <Compile Include="Machine.cs" />
+    <Compile Include="ModbusTcpMachine.cs" />
     <Compile Include="OpcMachine.cs" />
     <Compile Include="Producer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

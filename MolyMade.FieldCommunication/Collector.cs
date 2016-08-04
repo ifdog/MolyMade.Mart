@@ -34,7 +34,7 @@ namespace MolyMade.FieldCommunication
         {
             while (_runningtag.Value)
             {
-                while (_buffer.Count < 10 && _runningtag.Value)
+                while (_buffer.Count < _valuesWarp && _runningtag.Value)
                 {
                     _buffer.Add(_valuesQueue.Take());
                     Tools.Log(this,$"Took {_valuesWarp} from ValuesQueue");
