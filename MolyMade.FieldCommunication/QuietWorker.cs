@@ -22,34 +22,37 @@ namespace MolyMade.FieldCommunication
             this.MessageQueue = MessageQueue;
             _runningtag = Running;
             Tools.Log(this,"created");
-        }
-        
-        public void MachineConnect(Machine machine)
-        {
-            if (!machine.IsConnected)
-            {
-                machine.Connect();
-            }
-        }
+        } 
 
         public void Start()
             {
                 {
                     while (_runningtag.Value)
                     {
-                    Machine machine = _blockqingQuietQueue.Take();
-                        MachineConnect(machine);
-                        if (machine.IsConnected)
+                        Machine machine = _blockqingQuietQueue.Take();
+                        try
                         {
-                            _blockingActiveQueue.Add(machine);
+                            machine.Connect();
+
                         }
-                        else
+                        catch (Exception e)
                         {
-                            Tools.Log(this,$"{machine.Name} is quiet");
-                            _blockqingQuietQueue.Add(machine);
+                            Tools.Log(this, $"{machine.Name} Fails to connect:{e.Message}");
+                        }
+                        finally
+                        {
+                            if (machine.IsConnected)
+                            {
+                                _blockingActiveQueue.Add(machine);
+                            }
+                            else
+                            {
+                                Tools.Log(this, $"{machine.Name} is quiet");
+                                _blockqingQuietQueue.Add(machine);
+                            }
                         }
                     }
-                Thread.Sleep(100);
+                    Thread.Sleep(100);
                 }
             Tools.Log(this,"Exit");
         }

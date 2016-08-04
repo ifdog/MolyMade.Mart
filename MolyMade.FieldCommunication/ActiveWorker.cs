@@ -25,13 +25,6 @@ namespace MolyMade.FieldCommunication
             _messageQueue = messageQueue;
             _runningtag = Running;
             Tools.Log(this,"Created");
-
-        }
-
-        public Dictionary<string, string> MachineRead(Machine machine)
-        {
-            machine.Read();
-            return machine.Buffer;
         }
 
         public void Start()
@@ -41,9 +34,18 @@ namespace MolyMade.FieldCommunication
                 Machine machine = _blockingActiveQueue.Take();
                 if (machine.IsConnected)
                 {
-                    var x = MachineRead(machine);
-                    _blockingValuesQueue.Add(x);
-                    _blockingActiveQueue.Add(machine);
+                    try
+                    {
+                        _blockingValuesQueue.Add(machine.Read());
+                    }
+                    catch (Exception e)
+                    {
+                        Tools.Log(this, $"{machine.Name} fails to read:{e.Message}");
+                    }
+                    finally
+                    {
+                        _blockingActiveQueue.Add(machine);
+                    }
                 }
                 else
                 {

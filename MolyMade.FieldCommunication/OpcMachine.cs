@@ -49,16 +49,12 @@ namespace MolyMade.FieldCommunication
             }
             catch (Exception e)
             {
-                this.State= MachineState.FailToConnect;
-                if (Failures < 999)
-                {
-                    Failures ++;
-                }
-                Log(e.Message);
+                Failures++;
+                throw;
             }
         }
 
-        public override void Read()
+        public override Dictionary<string,string> Read()
         {
             try
             {
@@ -70,18 +66,27 @@ namespace MolyMade.FieldCommunication
                 Buffer["_TimeStamp"] = Tools.GetUnixTimeStamp().ToString();
                 this.State = MachineState.SuccessfullyRead;
                 this.LastRead = Tools.GetUnixTimeStamp();
+                return this.Buffer;
             }
             catch (Exception e)
             {
                 Log(e.Message);
                 this.State = MachineState.FailToRead;
+                throw;
             }
         }
 
         public override void Disconnect()
         {
-            _server.Disconnect();
-            this.State = MachineState.Disconnected;
+            try
+            {
+                _server.Disconnect();
+                this.State = MachineState.Disconnected;
+            }
+            catch (Exception e)
+            {
+                throw;
+            }
         }
 
         public override void Dispose()

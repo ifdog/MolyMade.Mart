@@ -58,7 +58,10 @@ namespace MolyMade.FieldCommunication
 
         public virtual void Disconnect(){}
 
-        public virtual void Read(){}
+        public virtual Dictionary<string, string> Read()
+        {
+            return new Dictionary<string, string>();
+        }
 
         protected virtual void Log(string s)
         {
