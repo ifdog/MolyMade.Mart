@@ -29,13 +29,14 @@ namespace MolyMade.Tester
 
         public void cbfunciton(List<Dictionary<string, string>> p)
         {
+            Dictionary<string,string> aa = new Dictionary<string, string>();
+            aa["啊"]="是";
             var x = p;
         }
 
         private void button2_Click(object sender, EventArgs e)
         {
-            MolyMade.FieldCommunication.Configurer c = new Configurer();
-               c.Load();
+            _Running.Value = false;
         }
     }
 }

@@ -12,7 +12,6 @@ namespace MolyMade.FieldCommunication
         {
             this.Name = name;
             this.Id = id;
-            this.IsConnected = false;
             this.LastConnected = -1;
             this.LastRead = -1;
             this.Path = path;
@@ -24,18 +23,18 @@ namespace MolyMade.FieldCommunication
 
         }
 
-        public string Name { get; protected set; }
-        public int Id { get; protected set; }
-        public string Path { get; protected set; }
-        public bool IsConnected { get; protected set; }
-        public long LastConnected { get; protected set; }
-        public long LastRead { get; protected set; }
-        public int Failures { get; protected set; }
-        public MachineTypes Type { get; protected set; }
-        public Dictionary<string,string> Tags { get; protected set; }
-        public Dictionary<string,string> Buffer { get; protected set; }
-        public MachineState State { get; protected set; }
-        public List<string> Logs { get; protected set; }
+        public abstract string Name { get; protected set; }
+        public abstract int Id { get; protected set; }
+        public abstract string Path { get; protected set; }
+        public abstract bool IsConnected { get;}
+        public abstract long LastConnected { get; protected set; }
+        public abstract long LastRead { get; protected set; }
+        public abstract int Failures { get; protected set; }
+        public abstract MachineTypes Type { get; protected set; }
+        public abstract Dictionary<string,string> Tags { get; protected set; }
+        public abstract Dictionary<string,string> Buffer { get; protected set; }
+        public abstract MachineState State { get; protected set; }
+        public abstract List<string> Logs { get; protected set; }
 
         public static Machine CreateInstance(string name, int id, string path, MachineTypes type, Dictionary<string, string> tags)
         {

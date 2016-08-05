@@ -49,7 +49,7 @@ namespace MolyMade.FieldCommunication
                 Dictionary<string,string> tmpDictionary = new Dictionary<string, string>();
                 foreach (KeyData key in section.Keys)
                 {
-                    tmpDictionary[key.KeyName] = key.Value.Trim();
+                    tmpDictionary[x] = key.Value.Trim();
                 }
                 tmpserverDictionary[section.SectionName.Trim()] = tmpDictionary;
             }
