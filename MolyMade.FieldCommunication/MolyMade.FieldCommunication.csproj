@@ -69,6 +69,7 @@
     <Compile Include="Producer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="QuietWorker.cs" />
+    <Compile Include="SocketWrapper.cs" />
     <Compile Include="Tools.cs" />
   </ItemGroup>
   <ItemGroup>

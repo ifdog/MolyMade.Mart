@@ -8,15 +8,10 @@ namespace MolyMade.FieldCommunication
 {
     public class ModbusTcpMachine:Machine
     {
-        public ModbusTcpMachine(string name, int id, string path, MachineTypes type, Dictionary<string, string> tags) : base(name, id, path, type, tags)
-        {
-            //TODO
-        }
-
         public override string Name { get; protected set; }
         public override int Id { get; protected set; }
         public override string Path { get; protected set; }
-        public override bool IsConnected { get; }
+        public override bool IsConnected { get { return this.socketWrapper.IsConnected; } }
         public override long LastConnected { get; protected set; }
         public override long LastRead { get; protected set; }
         public override int Failures { get; protected set; }
@@ -25,5 +20,43 @@ namespace MolyMade.FieldCommunication
         public override Dictionary<string, string> Buffer { get; protected set; }
         public override MachineState State { get; protected set; }
         public override List<string> Logs { get; protected set; }
+        private SocketWrapper socketWrapper;
+
+        public ModbusTcpMachine(string name, int id, string path, MachineTypes type, Dictionary<string, string> tags) : base(name, id, path, type, tags)
+        {
+            this.Name = name;
+            this.Id = id;
+            this.Path = path;//"192.168.1.10:502
+            this.Type = MachineTypes.Modbus;
+            this.Tags = tags;
+            string[] pathStrings = this.Path.Split(':');
+            socketWrapper = new SocketWrapper(pathStrings[0].Trim(),int.Parse(pathStrings[1].Trim()),1000);
+        }
+
+        public override void Connect()
+        {
+            if (!socketWrapper.IsConnected)
+            {
+                socketWrapper.Connect();
+            }
+        }
+
+        public override void Disconnect()
+        {
+            if (socketWrapper.IsConnected)
+            {
+                socketWrapper.Disconnect();
+            }
+        }
+
+        public override Dictionary<string, string> Read()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void Dispose()
+        {
+            this.socketWrapper.Dispose();
+        }
     }
 }
