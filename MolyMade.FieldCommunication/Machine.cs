@@ -20,7 +20,6 @@ namespace MolyMade.FieldCommunication
             this.Tags = tags;
             this.Buffer = new Dictionary<string, string>();
             this.Logs = new List<string>();
-
         }
 
         public abstract string Name { get; protected set; }
@@ -73,9 +72,9 @@ namespace MolyMade.FieldCommunication
 
         public virtual string[] ReadLog()
         {
-            string[] _logArray = Logs.ToArray();
+            string[] logArray = Logs.ToArray();
             Logs.Clear();
-            return _logArray;
+            return logArray;
         }
 
         public virtual void Dispose(){}
