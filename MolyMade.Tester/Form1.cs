@@ -23,7 +23,7 @@ namespace MolyMade.Tester
         private void button1_Click(object sender, EventArgs e)
         {
             CollectorCallback cb = new CollectorCallback(cbfunciton);
-            Controller c = new Controller(cb,_Running);
+            Controller c = new Controller(cb,_Running,10);
             c.Start();
             int x = 1;
         }

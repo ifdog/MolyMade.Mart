@@ -1,19 +1,19 @@
 ﻿using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace MolyMade.FieldCommunication
 {
-    static class Tools
+    public static class Tools
     {
         public static long GetUnixTimeStamp()
         {
             long epoch = (DateTime.Now.ToUniversalTime().Ticks - 621355968000000000) / 10000000;
             return epoch;
+        }
+
+        public static string GetCurrentTime()
+        {
+            return DateTime.Now.ToString();
         }
 
         public static class MachineId
@@ -38,15 +38,19 @@ namespace MolyMade.FieldCommunication
 
         public static void Log(object sender,string message, int timeout = 50)
         {
-            Ilog s = sender as Ilog;
+            ILog s = sender as ILog;
             if (s == null) { return;}
-            MessageItem item = new MessageItem()
+            MessageItem item = new MessageItem
             {
                 message =  message,
                 owner =  sender.GetType().ToString(),
                 threadId = Thread.CurrentThread.ManagedThreadId.ToString()
             };
             s.MessageQueue.TryAdd(item, timeout);
+            if (s.MessageQueue.Count > 500)
+            {
+                s.MessageQueue.Take();
+            }
         }
     }
 }

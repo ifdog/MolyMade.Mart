@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
-using System.Text;
+using TitaniumAS.Opc.Client.Common;
 using TitaniumAS.Opc.Client.Da;
-using  TitaniumAS.Opc.Client.Common;
 
 namespace MolyMade.FieldCommunication
 {
@@ -18,17 +18,17 @@ namespace MolyMade.FieldCommunication
         public override int Id { get; protected set; }
         public override string Path { get; protected set; }
         public override bool IsConnected => _server.IsConnected;
-        public override long LastConnected { get; protected set; }
-        public override long LastRead { get; protected set; }
+        public override DateTime LastConnected { get; protected set; }
+        public override DateTime LastRead { get; protected set; }
         public override int Failures { get; protected set; }
         public override MachineTypes Type { get; protected set; }
         public override Dictionary<string, string> Tags { get; protected set; }
         public override Dictionary<string, string> Buffer { get; protected set; }
-        public override MachineState State { get; protected set; }
+        public sealed override MachineState State { get; protected set; }
         public override List<string> Logs { get; protected set; }
 
         public OpcMachine(string name, int id, string path, MachineTypes type,
-            Dictionary<string, string> tags) : base(name, id, path, type, tags)
+            Dictionary<string, string> tags) : base(name,id,path,type,tags)
         {
             //path:"PCU50|OPC.SINUMERIK.Machineswitch"
             string[] urlStrings = path.Split('@');
@@ -36,14 +36,14 @@ namespace MolyMade.FieldCommunication
             {
                 throw new ArgumentException($"Invaild path string :{path}");
             }
-            this._url = UrlBuilder.Build(urlStrings[0], urlStrings[1]);
-            _server = new OpcDaServer(this._url);
-            _itemDefinitions = tags.Keys.Select(i => new OpcDaItemDefinition()
+            _url = UrlBuilder.Build(urlStrings[0], urlStrings[1]);
+            _server = new OpcDaServer(_url);
+            _itemDefinitions = tags.Keys.Select(i => new OpcDaItemDefinition
             {
                 ItemId = i.Trim(),
                 IsActive = true
             }).ToArray();
-            this.State = MachineState.NewlyCreated;
+            State = MachineState.NewlyCreated;
         }
 
         public override void Connect()
@@ -54,13 +54,16 @@ namespace MolyMade.FieldCommunication
                 _group = _server.AddGroup("MolyMadeGroup");
                 _group.IsActive = true;
                 _group.AddItems(_itemDefinitions);
-                this.State = MachineState.Connected;
-                this.LastConnected = Tools.GetUnixTimeStamp();
+                LastConnected = DateTime.Now;
                 Failures = 0;
             }
             catch (Exception)
             {
                 Failures++;
+                if (Failures > 99)
+                {
+                    Failures = 100;
+                }
                 throw;
             }
         }
@@ -75,14 +78,19 @@ namespace MolyMade.FieldCommunication
                     Buffer[Tags[value.Item.ItemId]] = value.Value.ToString();
                 }
                 Buffer["_TimeStamp"] = Tools.GetUnixTimeStamp().ToString();
-                this.State = MachineState.SuccessfullyRead;
-                this.LastRead = Tools.GetUnixTimeStamp();
-                return this.Buffer;
+                Buffer["_Name"] = Name;
+                Buffer["_Id"] = Id.ToString();
+                Buffer["_LastConnected"] = LastConnected.ToString(CultureInfo.InvariantCulture);
+                Buffer["_LastRead"] = LastRead.ToString(CultureInfo.InvariantCulture);
+                Buffer["_Failures"] = Failures.ToString();
+                State = MachineState.SuccessfullyRead;
+                LastRead = DateTime.Now;
+                return Buffer;
             }
             catch (Exception e)
             {
                 Log(e.Message);
-                this.State = MachineState.FailToRead;
+                State = MachineState.FailToRead;
                 throw;
             }
         }
@@ -92,7 +100,7 @@ namespace MolyMade.FieldCommunication
             try
             {
                 _server.Disconnect();
-                this.State = MachineState.Disconnected;
+                State = MachineState.Disconnected;
             }
             catch (Exception e)
             {
@@ -107,7 +115,7 @@ namespace MolyMade.FieldCommunication
 
         public override string ToString()
         {
-            return $"A opc machine ({this.Path}) with {Tags.Keys.Count} tags";
+            return $"A opc machine ({Path}) with {Tags.Keys.Count} tags";
         }
     }
 }

@@ -12,8 +12,8 @@ namespace MolyMade.FieldCommunication
         {
             this.Name = name;
             this.Id = id;
-            this.LastConnected = -1;
-            this.LastRead = -1;
+            this.LastConnected = DateTime.MinValue;
+            this.LastRead = DateTime.MinValue;
             this.Path = path;
             this.Failures = 0;
             this.Type = type;
@@ -26,8 +26,8 @@ namespace MolyMade.FieldCommunication
         public abstract int Id { get; protected set; }
         public abstract string Path { get; protected set; }
         public abstract bool IsConnected { get;}
-        public abstract long LastConnected { get; protected set; }
-        public abstract long LastRead { get; protected set; }
+        public abstract DateTime LastConnected { get; protected set; }
+        public abstract DateTime LastRead { get; protected set; }
         public abstract int Failures { get; protected set; }
         public abstract MachineTypes Type { get; protected set; }
         public abstract Dictionary<string,string> Tags { get; protected set; }
