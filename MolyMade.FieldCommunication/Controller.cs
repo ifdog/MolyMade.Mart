@@ -1,11 +1,16 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Configuration;
+using System.Linq;
+using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace MolyMade.FieldCommunication
 {
-    public class Controller:ILog
+    public class Controller:Ilog
     {
         private Configurer.ConfigurationData _configurationData;
         private readonly BlockingCollection<MessageItem>_messageQueue = 
@@ -13,18 +18,15 @@ namespace MolyMade.FieldCommunication
         private readonly BlockingCollection<Dictionary<string, string>> _valuesQueue = 
             new BlockingCollection<Dictionary<string, string>>(new ConcurrentQueue<Dictionary<string, string>>(), byte.MaxValue);
         private Producer _producer;
-        private readonly RunningTag _runningtag;
+        private RunningTag _runningtag;
         private Collector _collector;
-        private readonly CollectorCallback _collectorCallback;
-        private Action<List<Dictionary<string, string>>> _action;
+        private CollectorCallback _collectorCallback;
         public  BlockingCollection<MessageItem> MessageQueue => _messageQueue;
-        private int _warp;
 
-        public Controller(Action<List<Dictionary<string,string>>> callback ,RunningTag running,int warp=10)
+        public Controller(CollectorCallback callback,RunningTag running)
         {
-            _action = callback;
+            _collectorCallback = callback;
             _runningtag = running;
-            _warp = warp;
             Tools.Log(this,"Created");
         }
 
@@ -55,7 +57,7 @@ namespace MolyMade.FieldCommunication
             {
                 var collectorThread = new Thread(() =>
                 {
-                    _collector = new Collector(_valuesQueue,_messageQueue,_action, _runningtag,_warp);
+                    _collector = new Collector(_valuesQueue,_messageQueue,_collectorCallback, _runningtag,10);
                     _collector.start();
                 })
                 { IsBackground = true };

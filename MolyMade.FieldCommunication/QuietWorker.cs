@@ -1,10 +1,14 @@
 ﻿using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using System.Threading;
+ 
 
 namespace MolyMade.FieldCommunication
 {
-    internal class QuietWorker:ILog
+    internal class QuietWorker:Ilog
     {
         private readonly BlockingCollection<Machine> _blockqingQuietQueue;
         private readonly BlockingCollection<Machine> _blockingActiveQueue;
@@ -19,7 +23,7 @@ namespace MolyMade.FieldCommunication
         {
             _blockqingQuietQueue = quietQueue;
             _blockingActiveQueue = activeQueue;
-            MessageQueue = messageQueue;
+            this.MessageQueue = messageQueue;
             _runningtag = running;
             Tools.Log(this,"created");
         }
@@ -47,8 +51,8 @@ namespace MolyMade.FieldCommunication
                     }
                     else
                     {
-                        _blockqingQuietQueue.Add(machine);
                         Tools.Log(this, $"{machine.Name} is quiet");
+                        _blockqingQuietQueue.Add(machine);
                     }
                 }
             }

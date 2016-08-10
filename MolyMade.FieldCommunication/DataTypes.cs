@@ -1,5 +1,7 @@
-﻿using System.Collections.Concurrent;
+﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
+
 
 namespace MolyMade.FieldCommunication
 {
@@ -32,10 +34,10 @@ namespace MolyMade.FieldCommunication
         FailToConnect =4,
         SuccessfullyRead = 8,
         FailToRead =16,
-        Disconnected = 32
+        Disconnected = 32,
     }
 
-    public interface ILog
+    public interface Ilog
     {
         BlockingCollection<MessageItem> MessageQueue { get; }
     }

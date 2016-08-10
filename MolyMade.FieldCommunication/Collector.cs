@@ -1,10 +1,14 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.InteropServices.ComTypes;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace MolyMade.FieldCommunication
 {
-    class Collector:ILog
+    class Collector:Ilog
     {
         BlockingCollection<Dictionary<string, string>> _valuesQueue;
         private RunningTag _runningtag;
@@ -18,7 +22,7 @@ namespace MolyMade.FieldCommunication
             BlockingCollection<MessageItem> messageQueue,
             Action<List<Dictionary<string,string>>> callback, 
             RunningTag running,
-            int valueswarp)
+            int valueswarp = 1000)
         {
             _valuesQueue = valuesQueue;
             _runningtag = running;
@@ -39,6 +43,9 @@ namespace MolyMade.FieldCommunication
                 _action(_buffer);
                 _buffer.Clear();
             }
+
         }
+
+
     }
 }

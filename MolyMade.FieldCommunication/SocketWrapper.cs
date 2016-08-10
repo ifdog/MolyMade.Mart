@@ -1,6 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Configuration;
+using System.Linq;
 using System.Net;
 using System.Net.Sockets;
+using System.Text;
+using System.Threading.Tasks;
+using Common.Logging;
 
 namespace MolyMade.FieldCommunication
 {
@@ -16,40 +22,40 @@ namespace MolyMade.FieldCommunication
 
         public SocketWrapper(string ip, int port, int timeout)
         {
-            _ip = ip;
-            _port = port;
-            _timeOut = timeout;
+            this._ip = ip;
+            this._port = port;
+            this._timeOut = timeout;
         }
 
         public void Connect()
         {
-            _socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-            _socket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.SendTimeout, _timeOut);
+            this._socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            this._socket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.SendTimeout, _timeOut);
             IPEndPoint ip = new IPEndPoint(IPAddress.Parse(_ip), _port);
-            _socket.Connect(ip);
+            this._socket.Connect(ip);
         }
 
         public void Disconnect()
         {
-            _socket.Disconnect(true);
+            this._socket.Disconnect(true);
         }
 
         public byte[] Read(int length)
         {
             byte[] data = new byte[length];
-            _socket.Receive(data);
+            this._socket.Receive(data);
             return data;
         }
 
         public void Write(byte[] data)
         {
-            _socket.Send(data);
+            this._socket.Send(data);
         }
 
 
         public void Dispose()
         {
-            _socket?.Close();
+            this._socket?.Close();
         }
     }
 }

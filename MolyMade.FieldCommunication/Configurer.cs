@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using IniParser;
 using IniParser.Model;
 
@@ -12,7 +14,6 @@ namespace MolyMade.FieldCommunication
         public string SysIniPath { get; internal set; }
         public string ServerIniPath { get; internal set; }
         public ConfigurationData Configuration;
-
         public struct ConfigurationData
         {
             public Dictionary<string, Dictionary<string,string>> System;
@@ -21,16 +22,16 @@ namespace MolyMade.FieldCommunication
         
         public Configurer(string sysIniPath = "Mart.ini",string serverIniPath="Machines.ini")
         {
-            SysIniPath = sysIniPath;
-            ServerIniPath = serverIniPath;
-            Configuration = new ConfigurationData();
+            this.SysIniPath = sysIniPath;
+            this.ServerIniPath = serverIniPath;
+            this.Configuration = new ConfigurationData();
         }
 
         public ConfigurationData Load()
         {
             FileIniDataParser parser = new FileIniDataParser();
-            SysIni = parser.ReadFile(SysIniPath);
-            ServersIni = parser.ReadFile(ServerIniPath);
+            SysIni = parser.ReadFile(this.SysIniPath);
+            ServersIni = parser.ReadFile(this.ServerIniPath);
             Dictionary < string, Dictionary < string,string>> tmpsysDictionary = new Dictionary<string, Dictionary<string, string>>();
             foreach (SectionData section in SysIni.Sections)
             {
@@ -53,7 +54,7 @@ namespace MolyMade.FieldCommunication
                 tmpserverDictionary[section.SectionName.Trim()] = tmpDictionary;
             }
             Configuration.Machines = tmpserverDictionary;
-            return Configuration;
+            return this.Configuration;
         }
 
 
