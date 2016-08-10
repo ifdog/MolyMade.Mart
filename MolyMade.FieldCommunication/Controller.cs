@@ -1,4 +1,5 @@
-﻿using System.Collections.Concurrent;
+﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Threading;
 
@@ -15,12 +16,13 @@ namespace MolyMade.FieldCommunication
         private readonly RunningTag _runningtag;
         private Collector _collector;
         private readonly CollectorCallback _collectorCallback;
+        private Action<List<Dictionary<string, string>>> _action;
         public  BlockingCollection<MessageItem> MessageQueue => _messageQueue;
         private int _warp;
 
-        public Controller(CollectorCallback callback,RunningTag running,int warp=10)
+        public Controller(Action<List<Dictionary<string,string>>> callback ,RunningTag running,int warp=10)
         {
-            _collectorCallback = callback;
+            _action = callback;
             _runningtag = running;
             _warp = warp;
             Tools.Log(this,"Created");
@@ -53,7 +55,7 @@ namespace MolyMade.FieldCommunication
             {
                 var collectorThread = new Thread(() =>
                 {
-                    _collector = new Collector(_valuesQueue,_messageQueue,_collectorCallback, _runningtag,_warp);
+                    _collector = new Collector(_valuesQueue,_messageQueue,_action, _runningtag,_warp);
                     _collector.start();
                 })
                 { IsBackground = true };

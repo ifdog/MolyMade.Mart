@@ -22,8 +22,8 @@ namespace MolyMade.Tester
 
         private void button1_Click(object sender, EventArgs e)
         {
-            CollectorCallback cb = new CollectorCallback(cbfunciton);
-            Controller c = new Controller(cb,_Running,10);
+            CollectorCallback cb = new CollectorCallback(cbfunciton2);
+            Controller c = new Controller(cbfunciton,_Running,10);
             c.Start();
             int x = 1;
         }
@@ -32,6 +32,10 @@ namespace MolyMade.Tester
         {
             Dictionary<string,string> aa = new Dictionary<string, string>();
 
+            var x = p;
+        }
+        public void cbfunciton2(List<Dictionary<string, string>> p)
+        {
             var x = p;
         }
 

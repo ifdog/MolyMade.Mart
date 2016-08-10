@@ -1,4 +1,5 @@
-﻿using System.Collections.Concurrent;
+﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 
 namespace MolyMade.FieldCommunication
@@ -9,18 +10,19 @@ namespace MolyMade.FieldCommunication
         private RunningTag _runningtag;
         List<Dictionary<string,string>> _buffer = new List<Dictionary<string, string>>();
         private CollectorCallback _callback;
+        private Action<List<Dictionary<string, string>>> _action;
         private int _valuesWarp;
         public BlockingCollection<MessageItem> MessageQueue { get; }
 
         public Collector(BlockingCollection<Dictionary<string,string>> valuesQueue,
             BlockingCollection<MessageItem> messageQueue,
-            CollectorCallback callback, 
+            Action<List<Dictionary<string,string>>> callback, 
             RunningTag running,
             int valueswarp)
         {
             _valuesQueue = valuesQueue;
             _runningtag = running;
-            _callback = callback;
+            _action = callback;
             MessageQueue = messageQueue;
             _valuesWarp = valueswarp;
         }
@@ -34,7 +36,7 @@ namespace MolyMade.FieldCommunication
                     _buffer.Add(_valuesQueue.Take());
                     Tools.Log(this,$"Took {_valuesWarp} from ValuesQueue");
                 }
-                _callback.Invoke(_buffer);
+                _action(_buffer);
                 _buffer.Clear();
             }
         }
