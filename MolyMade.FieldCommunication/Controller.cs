@@ -22,12 +22,14 @@ namespace MolyMade.FieldCommunication
         private Collector _collector;
         private CollectorCallback _collectorCallback;
         public  BlockingCollection<MessageItem> MessageQueue => _messageQueue;
+        private int _warp;
 
-        public Controller(CollectorCallback callback,RunningTag running)
+        public Controller(CollectorCallback callback,RunningTag running,int warp = 1000)
         {
             _collectorCallback = callback;
             _runningtag = running;
             Tools.Log(this,"Created");
+            _warp = warp;
         }
 
         public void Init()
@@ -57,7 +59,7 @@ namespace MolyMade.FieldCommunication
             {
                 var collectorThread = new Thread(() =>
                 {
-                    _collector = new Collector(_valuesQueue,_messageQueue,_collectorCallback, _runningtag,10);
+                    _collector = new Collector(_valuesQueue,_messageQueue,_collectorCallback, _runningtag,_warp);
                     _collector.start();
                 })
                 { IsBackground = true };
