@@ -17,7 +17,11 @@ namespace MolyMade.FieldCommunication
         private readonly BlockingCollection<MessageItem> _messageQueue;
         private RunningTag _runningtag;
         public BlockingCollection<MessageItem> MessageQueue { get { return _messageQueue; }}
-        public ActiveWorker(BlockingCollection<Machine> blockingQuietQueue, BlockingCollection<Machine> blockingActiveQueue, BlockingCollection<Dictionary<string,string>> blockingServerValuesQueue, BlockingCollection<MessageItem> messageQueue,RunningTag Running)
+        public ActiveWorker(BlockingCollection<Machine> blockingQuietQueue, 
+            BlockingCollection<Machine> blockingActiveQueue, 
+            BlockingCollection<Dictionary<string,string>> blockingServerValuesQueue, 
+            BlockingCollection<MessageItem> messageQueue,
+            RunningTag Running)
         {
             _blockingQuietQueue = blockingQuietQueue;
             _blockingActiveQueue = blockingActiveQueue;
