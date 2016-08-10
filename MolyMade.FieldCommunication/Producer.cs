@@ -65,17 +65,16 @@ namespace MolyMade.FieldCommunication
         {
             foreach (string key in definitions.Keys)
             {
-                if (!Convert.ToBoolean(definitions[key]["Enable"])) { continue;}
-                Machine aMachine = Machine.CreateInstance(
+                if (!Convert.ToBoolean(definitions[key]["Enable"])) {continue;}
+                machines.Add(Machine.CreateInstance(
                     key,
                     Tools.MachineId.Create(),
                     definitions[key]["Path"],
-                    (MachineTypes) (Convert.ToInt32(definitions[key]["Type"])),
+                    (MachineTypes)(Convert.ToInt32(definitions[key]["Type"])),
                     definitions[key]
                         .Where(kv => kv.Key.StartsWith("_"))
                         .Select(kv => new KeyValuePair<string, string>(kv.Key.Remove(0, 1), kv.Value))
-                        .ToDictionary(kv => kv.Key, kv => kv.Value));
-                machines.Add(aMachine);
+                        .ToDictionary(kv => kv.Key, kv => kv.Value)));
             }
         }
 

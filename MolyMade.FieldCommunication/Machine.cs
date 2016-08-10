@@ -12,8 +12,8 @@ namespace MolyMade.FieldCommunication
         {
             this.Name = name;
             this.Id = id;
-            this.LastConnected = -1;
-            this.LastRead = -1;
+            this.LastConnected = DateTime.MinValue;
+            this.LastRead = DateTime.MinValue;
             this.Path = path;
             this.Failures = 0;
             this.Type = type;
@@ -26,13 +26,12 @@ namespace MolyMade.FieldCommunication
         public abstract int Id { get; protected set; }
         public abstract string Path { get; protected set; }
         public abstract bool IsConnected { get;}
-        public abstract long LastConnected { get; protected set; }
-        public abstract long LastRead { get; protected set; }
+        public abstract DateTime LastConnected { get; protected set; }
+        public abstract DateTime LastRead { get; protected set; }
         public abstract int Failures { get; protected set; }
         public abstract MachineTypes Type { get; protected set; }
         public abstract Dictionary<string,string> Tags { get; protected set; }
         public abstract Dictionary<string,string> Buffer { get; protected set; }
-        public abstract MachineState State { get; protected set; }
         public abstract List<string> Logs { get; protected set; }
 
         public static Machine CreateInstance(string name, int id, string path, MachineTypes type, Dictionary<string, string> tags)
@@ -43,8 +42,8 @@ namespace MolyMade.FieldCommunication
                     return new OpcMachine(name,id,path,type,tags);
                 case MachineTypes.Modbus:
                     return null;
-                case MachineTypes.Other:
-                    return null;
+                case MachineTypes.Test:
+                    return new TestMachine(name,id,path,type,tags);
                 case MachineTypes.Other2:
                     return null;
                 default:

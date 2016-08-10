@@ -25,7 +25,7 @@ namespace MolyMade.FieldCommunication
              }
             public static int Create()
             {
-                if (_mem > 99999) { _mem = 0;}
+                if (_mem > 9999) { _mem = 0;}
                 _mem++;
                 return _mem;
             }
@@ -42,9 +42,9 @@ namespace MolyMade.FieldCommunication
             if (s == null) { return;}
             MessageItem item = new MessageItem()
             {
-                message =  message,
-                owner =  sender.GetType().ToString(),
-                threadId = Thread.CurrentThread.ManagedThreadId.ToString()
+                Message =  message,
+                Owner =  sender.GetType().ToString(),
+                ThreadId = Thread.CurrentThread.ManagedThreadId.ToString()
             };
             s.MessageQueue.TryAdd(item, timeout);
         }

@@ -12,13 +12,12 @@ namespace MolyMade.FieldCommunication
         public override int Id { get; protected set; }
         public override string Path { get; protected set; }
         public override bool IsConnected { get { return this.socketWrapper.IsConnected; } }
-        public override long LastConnected { get; protected set; }
-        public override long LastRead { get; protected set; }
+        public override DateTime LastConnected { get; protected set; }
+        public override DateTime LastRead { get; protected set; }
         public override int Failures { get; protected set; }
         public override MachineTypes Type { get; protected set; }
         public override Dictionary<string, string> Tags { get; protected set; }
         public override Dictionary<string, string> Buffer { get; protected set; }
-        public override MachineState State { get; protected set; }
         public override List<string> Logs { get; protected set; }
         private SocketWrapper socketWrapper;
 

@@ -14,17 +14,18 @@ namespace MolyMade.FieldCommunication
 
     public struct MessageItem
     {
-        public string owner;
-        public string threadId;
-        public string message;
+        public string Owner;
+        public string ThreadId;
+        public string Message;
     }
 
     public enum MachineTypes
     {
-        Opc = 1,
-        Modbus = 2,
-        Other = 3,
-        Other2 = 4
+        Test = 0, //a fake server,used for testing.
+        Opc = 1,  //OPC server
+        Modbus = 2, //Modbus TCP server,under construction.
+        Other = 3, //nothing
+        Other2 = 4 //nothing
     }
 
     public enum MachineState
