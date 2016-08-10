@@ -21,7 +21,11 @@ namespace MolyMade.FieldCommunication
         public override Dictionary<string, string> Buffer { get; protected set; }
         public override List<string> Logs { get; protected set; }
 
-        public TestMachine(string name, int id, string path, MachineTypes type, Dictionary<string, string> tags) : base(name, id, path, type, tags)
+        public TestMachine(
+            string name, 
+            int id, string path, 
+            MachineTypes type, 
+            Dictionary<string, string> tags) : base(name, id, path, type, tags)
         {
             Name = name;
             Id = id;
@@ -53,7 +57,8 @@ namespace MolyMade.FieldCommunication
         {
             if (!_isconnected) { throw new Exception("Not connected");}
             Random r = new Random();
-            Buffer = Tags.Keys.Select(k => new KeyValuePair<string, string>(Tags[k], r.NextDouble().ToString()))
+            Buffer = Tags.Keys
+                .Select(k => new KeyValuePair<string, string>(Tags[k], $"{r.NextDouble()}"))
                 .ToDictionary(kv => kv.Key, kv => kv.Value);
             Buffer["_TimeStamp"] = Tools.GetUnixTimeStamp().ToString();
             Buffer["_Name"] = this.Name;

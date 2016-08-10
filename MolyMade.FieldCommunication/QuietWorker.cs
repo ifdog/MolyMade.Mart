@@ -30,14 +30,12 @@ namespace MolyMade.FieldCommunication
 
         public void Start()
         {
-
             while (_runningtag.Value)
             {
                 Machine machine = _blockqingQuietQueue.Take();
                 try
                 {
                     machine.Connect();
-
                 }
                 catch (Exception e)
                 {

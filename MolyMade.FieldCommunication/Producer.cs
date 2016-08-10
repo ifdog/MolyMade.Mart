@@ -78,11 +78,11 @@ namespace MolyMade.FieldCommunication
             }
         }
 
-        private void QueuesInit(List<Machine> MachineList, 
+        private void QueuesInit(List<Machine> machineList, 
             out BlockingCollection<Machine> quietQueue, 
             out BlockingCollection<Machine> activeQueue)
         {
-            quietQueue = new BlockingCollection<Machine>(new ConcurrentQueue<Machine>(MachineList), byte.MaxValue);
+            quietQueue = new BlockingCollection<Machine>(new ConcurrentQueue<Machine>(machineList), byte.MaxValue);
             activeQueue = new BlockingCollection<Machine>(new ConcurrentQueue<Machine>(), byte.MaxValue);
         }
     }
