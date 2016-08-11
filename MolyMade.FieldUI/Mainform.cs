@@ -12,6 +12,7 @@ namespace MolyMade.FieldUI
 {
     public partial class Mainform : Form
     {
+        Controller c = new Controller();
         public Mainform()
         {
             InitializeComponent();
@@ -21,6 +22,11 @@ namespace MolyMade.FieldUI
         {
             Eventsform eventsform = new Eventsform();
             eventsform.Show();
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

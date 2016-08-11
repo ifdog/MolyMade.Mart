@@ -58,7 +58,7 @@ namespace MolyMade.FieldCommunication
             }
             catch (Exception)
             {
-                Failures++;
+                Failures = Failures > 100 ? 99 : Failures + 1;
                 throw;
             }
         }

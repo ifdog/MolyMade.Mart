@@ -53,7 +53,7 @@ namespace MolyMade.FieldCommunication
                         _blockqingQuietQueue.Add(machine);
                     }
                 }
-                Thread.Sleep(100);
+                Thread.Sleep((machine.Failures*machine.Failures+1)*100);
             }
             Tools.Log(this, "Exit");
         }

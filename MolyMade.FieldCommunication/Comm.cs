@@ -34,7 +34,7 @@ namespace MolyMade.FieldCommunication
             _warp = warp;
         }
 
-        public void Init()
+        private void Init()
         {
             Configurer c = new Configurer();
             _configurationData = c.Load();
@@ -42,6 +42,9 @@ namespace MolyMade.FieldCommunication
             Tools.Log(this,"initlized");
         }
 
+        /// <summary>
+        /// Start communication.
+        /// </summary>
         public void Start()
         {
             Init();
@@ -49,6 +52,9 @@ namespace MolyMade.FieldCommunication
             StartCollector();
         }
 
+        /// <summary>
+        /// Stop communication
+        /// </summary>
         public void Stop()
         {
             _runningtag.Value = false; //todo:Test.
