@@ -10,11 +10,11 @@ namespace MolyMade.FieldCommunication
 {
     class Collector:Ilog
     {
-        BlockingCollection<Dictionary<string, string>> _valuesQueue;
-        private RunningTag _runningtag;
-        List<Dictionary<string,string>> _buffer = new List<Dictionary<string, string>>();
+        readonly BlockingCollection<Dictionary<string, string>> _valuesQueue;
+        private readonly RunningTag _runningtag;
+        readonly List<Dictionary<string,string>> _buffer = new List<Dictionary<string, string>>();
         public event DataMountHandler DataMount ;
-        private int _valuesWarp;
+        private readonly int _valuesWarp;
         public BlockingCollection<MessageItem> MessageQueue { get; }
 
         public Collector(BlockingCollection<Dictionary<string,string>> valuesQueue,

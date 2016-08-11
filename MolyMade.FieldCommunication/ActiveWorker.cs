@@ -14,20 +14,20 @@ namespace MolyMade.FieldCommunication
         private readonly BlockingCollection<Machine> _blockingQuietQueue;
         private readonly BlockingCollection<Machine> _blockingActiveQueue;
         private readonly BlockingCollection<Dictionary<string,string>> _blockingValuesQueue;
-        private readonly BlockingCollection<MessageItem> _messageQueue;
-        private RunningTag _runningtag;
-        public BlockingCollection<MessageItem> MessageQueue { get { return _messageQueue; }}
+        private readonly RunningTag _runningtag;
+        public BlockingCollection<MessageItem> MessageQueue { get; }
+
         public ActiveWorker(BlockingCollection<Machine> blockingQuietQueue, 
             BlockingCollection<Machine> blockingActiveQueue, 
             BlockingCollection<Dictionary<string,string>> blockingServerValuesQueue, 
             BlockingCollection<MessageItem> messageQueue,
-            RunningTag Running)
+            RunningTag running)
         {
             _blockingQuietQueue = blockingQuietQueue;
             _blockingActiveQueue = blockingActiveQueue;
             _blockingValuesQueue = blockingServerValuesQueue;
-            _messageQueue = messageQueue;
-            _runningtag = Running;
+            MessageQueue = messageQueue;
+            _runningtag = running;
             Tools.Log(this,"Created");
         }
 

@@ -12,28 +12,28 @@ namespace MolyMade.FieldCommunication
 {
     class Producer
     {
-        private Dictionary<string, Dictionary<string, string>> _MachinesDefinition;
+        private readonly Dictionary<string, Dictionary<string, string>> _MachinesDefinition;
         private BlockingCollection<Machine> _quietQueue = new BlockingCollection<Machine>(new ConcurrentQueue<Machine>(),byte.MaxValue);
         private BlockingCollection<Machine> _activeQueue = new BlockingCollection<Machine>(new ConcurrentQueue<Machine>(),byte.MaxValue);
-        private BlockingCollection<MessageItem> _messageQueue;
-        private BlockingCollection<Dictionary<string,string>> _valuesQueue;
+        private readonly BlockingCollection<MessageItem> _messageQueue;
+        private readonly BlockingCollection<Dictionary<string,string>> _valuesQueue;
         private readonly int _quietThreads;
         private readonly int _activeThreads;
-        private RunningTag _runningtag;
+        private readonly RunningTag _runningtag;
         public Producer(
             Dictionary<string,Dictionary<string,string>> machines,
             BlockingCollection<Dictionary<string,string>> valuesQueue, 
             BlockingCollection<MessageItem> messageQueue,
             RunningTag running,
-            int QuietThreads = 1, 
-            int ActiveThreads = 1
+            int quietThreads = 1, 
+            int activeThreads = 1
           )
         {
             _MachinesDefinition = machines;
             _valuesQueue = valuesQueue;
             _messageQueue = messageQueue;
-            _quietThreads = QuietThreads;
-            _activeThreads = ActiveThreads;
+            _quietThreads = quietThreads;
+            _activeThreads = activeThreads;
             _runningtag = running;
         }
 

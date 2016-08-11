@@ -18,10 +18,10 @@ namespace MolyMade.FieldCommunication
         private readonly BlockingCollection<Dictionary<string, string>> _valuesQueue = 
             new BlockingCollection<Dictionary<string, string>>(new ConcurrentQueue<Dictionary<string, string>>(), byte.MaxValue);
         private Producer _producer;
-        private RunningTag _runningtag;
+        private readonly RunningTag _runningtag;
         private Collector _collector;
         public  BlockingCollection<MessageItem> MessageQueue => _messageQueue;
-        private int _warp;
+        private readonly int _warp;
         public event DataMountHandler DataMount;
 
         public Comm(int warp = 1000)
