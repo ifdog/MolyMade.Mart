@@ -13,24 +13,22 @@ namespace MolyMade.FieldCommunication
         BlockingCollection<Dictionary<string, string>> _valuesQueue;
         private RunningTag _runningtag;
         List<Dictionary<string,string>> _buffer = new List<Dictionary<string, string>>();
-        private CollectorCallback _callback;
+        public event DataMountHandler DataMount ;
         private int _valuesWarp;
         public BlockingCollection<MessageItem> MessageQueue { get; }
 
         public Collector(BlockingCollection<Dictionary<string,string>> valuesQueue,
             BlockingCollection<MessageItem> messageQueue,
-            CollectorCallback callback, 
             RunningTag running,
             int valueswarp)
         {
             _valuesQueue = valuesQueue;
             _runningtag = running;
-            _callback = callback;
             MessageQueue = messageQueue;
             _valuesWarp = valueswarp;
         }
 
-        public void start()
+        public void Start()
         {
             while (_runningtag.Value)
             {
@@ -39,7 +37,10 @@ namespace MolyMade.FieldCommunication
                     _buffer.Add(_valuesQueue.Take());
                     Tools.Log(this,$"Took {_valuesWarp} from ValuesQueue");
                 }
-                _callback(_buffer);
+                DataMount?.Invoke(this,new DataMountEventArgs()
+                {
+                    Tags = _buffer
+                });
                 _buffer.Clear();
             }
             Tools.Log(this,"Exit");

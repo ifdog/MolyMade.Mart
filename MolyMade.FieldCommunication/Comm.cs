@@ -20,13 +20,12 @@ namespace MolyMade.FieldCommunication
         private Producer _producer;
         private RunningTag _runningtag;
         private Collector _collector;
-        private CollectorCallback _collectorCallback;
         public  BlockingCollection<MessageItem> MessageQueue => _messageQueue;
         private int _warp;
+        public event DataMountHandler DataMount;
 
-        public Comm(CollectorCallback callback,int warp = 1000)
+        public Comm(int warp = 1000)
         {
-            _collectorCallback = callback;
             _runningtag = new RunningTag()
             {
                 Value = true
@@ -52,7 +51,7 @@ namespace MolyMade.FieldCommunication
 
         public void Stop()
         {
-            _runningtag.Value = false;
+            _runningtag.Value = false; //todo:Test.
         }
 
         private void StartProducer()
@@ -67,14 +66,13 @@ namespace MolyMade.FieldCommunication
             {
                 var collectorThread = new Thread(() =>
                 {
-                    _collector = new Collector(_valuesQueue,_messageQueue,_collectorCallback, _runningtag,_warp);
-                    _collector.start();
+                    _collector = new Collector(_valuesQueue,_messageQueue,_runningtag,_warp);
+                    _collector.DataMount += DataMount;
+                    _collector.Start();
                 })
                 { IsBackground = true };
                 collectorThread.Start();
             }
         }
-
-
     }
 }

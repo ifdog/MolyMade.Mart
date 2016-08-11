@@ -19,23 +19,18 @@ namespace MolyMade.Tester
         public Form1()
         {
             InitializeComponent();
-            c = new Comm(cbfunciton, 50);
+            c = new Comm(10);
+            c.DataMount += C_DataMount;
+        }
+
+        private  void C_DataMount(object sender, DataMountEventArgs args)
+        {
+            var x = args;
         }
 
         private void button1_Click(object sender, EventArgs e)
-        {
-
-            
+        {     
             c.Start();
-        }
-
-        public void cbfunciton(List<Dictionary<string, string>> p)
-        {
-            var x = p;
-        }
-        public void cbfunciton2(List<Dictionary<string, string>> p)
-        {
-            var x = p;
         }
 
         private void button2_Click(object sender, EventArgs e)

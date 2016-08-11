@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Linq;
 
 
 namespace MolyMade.FieldCommunication
 {
-    public delegate void CollectorCallback(List<Dictionary<string, string>> valuesList);
+    public delegate void DataMountHandler(object sender, DataMountEventArgs args);
 
     public class RunningTag
     {
@@ -41,5 +42,10 @@ namespace MolyMade.FieldCommunication
     public interface Ilog
     {
         BlockingCollection<MessageItem> MessageQueue { get; }
+    }
+
+    public class DataMountEventArgs : EventArgs
+    {
+        public List<Dictionary<string, string>> Tags;
     }
 }
