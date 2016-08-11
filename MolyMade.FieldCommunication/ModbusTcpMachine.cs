@@ -19,6 +19,7 @@ namespace MolyMade.FieldCommunication
         public override Dictionary<string, string> Tags { get; protected set; }
         public override Dictionary<string, string> Buffer { get; protected set; }
         public override List<string> Logs { get; protected set; }
+        public override string _lastMessage { get; protected set; }
         private SocketWrapper socketWrapper;
 
         public ModbusTcpMachine(string name, int id, string path, MachineTypes type, Dictionary<string, string> tags) : base(name, id, path, type, tags)

@@ -15,23 +15,22 @@ namespace MolyMade.Tester
     public partial class Form1 : Form
     {
         public RunningTag _Running = new RunningTag() {Value = true};
+        private Comm c;
         public Form1()
         {
             InitializeComponent();
+            c = new Comm(cbfunciton, 50);
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
-            CollectorCallback cb = new CollectorCallback(cbfunciton2);
-            Controller c = new Controller(cbfunciton,_Running,10);
+
+            
             c.Start();
-            int x = 1;
         }
 
         public void cbfunciton(List<Dictionary<string, string>> p)
         {
-            Dictionary<string,string> aa = new Dictionary<string, string>();
-
             var x = p;
         }
         public void cbfunciton2(List<Dictionary<string, string>> p)
@@ -41,12 +40,7 @@ namespace MolyMade.Tester
 
         private void button2_Click(object sender, EventArgs e)
         {
-            FileStream fs = File.OpenRead("Mart.ini");
-            StreamReader sr = new StreamReader(fs);
-            string x = sr.ReadToEnd();
-         //   byte[] bb = Encoding.GetEncoding("GB2312").GetBytes(x);
-            string y = Encoding.GetEncoding("GB2312").GetString(Encoding.GetEncoding("GB2312").GetBytes(x));
-            int x1 = 1;
+            c.Stop();
         }
     }
 }

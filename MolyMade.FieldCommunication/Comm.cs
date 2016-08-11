@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace MolyMade.FieldCommunication
 {
-    public class Controller:Ilog
+    public class Comm:Ilog
     {
         private Configurer.ConfigurationData _configurationData;
         private readonly BlockingCollection<MessageItem>_messageQueue = 
@@ -24,10 +24,13 @@ namespace MolyMade.FieldCommunication
         public  BlockingCollection<MessageItem> MessageQueue => _messageQueue;
         private int _warp;
 
-        public Controller(CollectorCallback callback,RunningTag running,int warp = 1000)
+        public Comm(CollectorCallback callback,int warp = 1000)
         {
             _collectorCallback = callback;
-            _runningtag = running;
+            _runningtag = new RunningTag()
+            {
+                Value = true
+            };
             Tools.Log(this,"Created");
             _warp = warp;
         }
@@ -47,7 +50,12 @@ namespace MolyMade.FieldCommunication
             StartCollector();
         }
 
-        public void StartProducer()
+        public void Stop()
+        {
+            _runningtag.Value = false;
+        }
+
+        private void StartProducer()
         {
             _producer.Start();
         }

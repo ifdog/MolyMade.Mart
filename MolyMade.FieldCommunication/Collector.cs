@@ -42,9 +42,7 @@ namespace MolyMade.FieldCommunication
                 _callback(_buffer);
                 _buffer.Clear();
             }
-
+            Tools.Log(this,"Exit");
         }
-
-
     }
 }

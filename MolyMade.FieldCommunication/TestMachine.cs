@@ -20,6 +20,7 @@ namespace MolyMade.FieldCommunication
         public override Dictionary<string, string> Tags { get; protected set; }
         public override Dictionary<string, string> Buffer { get; protected set; }
         public override List<string> Logs { get; protected set; }
+        public override string _lastMessage { get; protected set; }
 
         public TestMachine(
             string name, 
@@ -60,13 +61,7 @@ namespace MolyMade.FieldCommunication
             Buffer = Tags.Keys
                 .Select(k => new KeyValuePair<string, string>(Tags[k], $"{r.NextDouble()}"))
                 .ToDictionary(kv => kv.Key, kv => kv.Value);
-            Buffer["_TimeStamp"] = Tools.GetUnixTimeStamp().ToString();
-            Buffer["_Name"] = this.Name;
-            Buffer["_Id"] = this.Id.ToString();
-            Buffer["_Path"] = this.Path;
-            Buffer["_LastConnected"] = this.LastConnected.ToString();
-            Buffer["_LastRead"] = this.LastRead.ToString();
-            Buffer["_Failures"] = this.Failures.ToString();
+            Addtags();
             LastRead = DateTime.Now;
             return Buffer;
         }

@@ -25,6 +25,7 @@ namespace MolyMade.FieldCommunication
         public override Dictionary<string, string> Tags { get; protected set; }
         public override Dictionary<string, string> Buffer { get; protected set; }
         public override List<string> Logs { get; protected set; }
+        public override string _lastMessage { get; protected set; }
 
         public OpcMachine(string name, int id, string path, MachineTypes type,
             Dictionary<string, string> tags) : base(name, id, path, type, tags)
@@ -71,13 +72,7 @@ namespace MolyMade.FieldCommunication
                 {
                     Buffer[Tags[value.Item.ItemId]] = value.Value.ToString();
                 }
-                Buffer["_TimeStamp"] = Tools.GetUnixTimeStamp().ToString();
-                Buffer["_Name"] = this.Name;
-                Buffer["_Id"] = this.Id.ToString();
-                Buffer["_Path"] = this.Path;
-                Buffer["_LastConnected"] = this.LastConnected.ToString();
-                Buffer["_LastRead"] = this.LastRead.ToString();
-                Buffer["_Failures"] = this.Failures.ToString();
+                Addtags();
                 this.LastRead = DateTime.Now;
                 return this.Buffer;
             }

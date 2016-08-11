@@ -33,6 +33,7 @@ namespace MolyMade.FieldCommunication
         public abstract Dictionary<string,string> Tags { get; protected set; }
         public abstract Dictionary<string,string> Buffer { get; protected set; }
         public abstract List<string> Logs { get; protected set; }
+        public abstract string _lastMessage { get; protected set; }
 
         public static Machine CreateInstance(string name, int id, string path, MachineTypes type, Dictionary<string, string> tags)
         {
@@ -67,6 +68,18 @@ namespace MolyMade.FieldCommunication
                 Logs.RemoveAt(0);
             }
             Logs.Add(s);
+        }
+
+        public virtual void Addtags()
+        {
+            Buffer["_TimeStamp"] = Tools.GetUnixTimeStamp().ToString();
+            Buffer["_Name"] = this.Name;
+            Buffer["_Id"] = this.Id.ToString();
+            Buffer["_Path"] = this.Path;
+            Buffer["_LastConnected"] = this.LastConnected.ToString();
+            Buffer["_LastRead"] = this.LastRead.ToString();
+            Buffer["_Failures"] = this.Failures.ToString();
+            Buffer["_LastMessage"] = this._lastMessage;
         }
 
         public virtual string[] ReadLog()
