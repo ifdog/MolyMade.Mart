@@ -44,7 +44,7 @@ namespace MolyMade.FieldCommunication
             }
             if (Path.Contains('@'))
             {
-                Thread.Sleep(1600);
+                Thread.Sleep(200);
                 _isconnected = true;
                 LastConnected = DateTime.Now;
             }
