@@ -12,7 +12,7 @@ namespace MolyMade.FieldCommunication
 {
     class Producer
     {
-        private readonly Dictionary<string, Dictionary<string, string>> _MachinesDefinition;
+        private readonly Dictionary<string, Dictionary<string, string>> _machinesDefinition;
         private BlockingCollection<Machine> _quietQueue = new BlockingCollection<Machine>(new ConcurrentQueue<Machine>(),byte.MaxValue);
         private BlockingCollection<Machine> _activeQueue = new BlockingCollection<Machine>(new ConcurrentQueue<Machine>(),byte.MaxValue);
         private readonly BlockingCollection<MessageItem> _messageQueue;
@@ -29,7 +29,7 @@ namespace MolyMade.FieldCommunication
             int activeThreads = 1
           )
         {
-            _MachinesDefinition = machines;
+            _machinesDefinition = machines;
             _valuesQueue = valuesQueue;
             _messageQueue = messageQueue;
             _quietThreads = quietThreads;
@@ -40,12 +40,10 @@ namespace MolyMade.FieldCommunication
         public void Start()
         {
             List<Machine> machines = new List<Machine>();
-            MachinesMake(_MachinesDefinition,machines);
+            MachinesMake(_machinesDefinition,machines);
             QueuesInit(machines,out _quietQueue,out _activeQueue);
-
             QuietWorker qw = new QuietWorker(_quietQueue,_activeQueue,_messageQueue, _runningtag);
             ActiveWorker aw = new ActiveWorker(_quietQueue,_activeQueue,_valuesQueue,_messageQueue, _runningtag);
-   
             bool[] quietThreads = new bool[_quietThreads];
             bool[] activeThreads = new bool[_activeThreads];
             foreach (bool b in quietThreads)
@@ -68,7 +66,7 @@ namespace MolyMade.FieldCommunication
                 if (!Convert.ToBoolean(definitions[key]["Enable"])) {continue;}
                 machines.Add(Machine.CreateInstance(
                     key,
-                    Tools.MachineId.Create(),
+                    Utilities.MachineId.Create(),
                     definitions[key]["Path"],
                     (MachineTypes)(Convert.ToInt32(definitions[key]["Type"])),
                     definitions[key]

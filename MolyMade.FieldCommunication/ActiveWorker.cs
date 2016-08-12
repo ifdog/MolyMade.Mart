@@ -16,19 +16,21 @@ namespace MolyMade.FieldCommunication
         private readonly BlockingCollection<Dictionary<string,string>> _blockingValuesQueue;
         private readonly RunningTag _runningtag;
         public BlockingCollection<MessageItem> MessageQueue { get; }
+        private int _interval;
 
         public ActiveWorker(BlockingCollection<Machine> blockingQuietQueue, 
             BlockingCollection<Machine> blockingActiveQueue, 
             BlockingCollection<Dictionary<string,string>> blockingServerValuesQueue, 
             BlockingCollection<MessageItem> messageQueue,
-            RunningTag running)
+            RunningTag running, int interval=100)
         {
             _blockingQuietQueue = blockingQuietQueue;
             _blockingActiveQueue = blockingActiveQueue;
             _blockingValuesQueue = blockingServerValuesQueue;
             MessageQueue = messageQueue;
             _runningtag = running;
-            Tools.Log(this,"Created");
+            _interval = interval;
+            Utilities.Log(this,"Created");
         }
 
         public void Start()
@@ -44,7 +46,7 @@ namespace MolyMade.FieldCommunication
                     }
                     catch (Exception e)
                     {
-                        Tools.Log(this, $"{machine.Name} fails to read:{e.Message}");
+                        Utilities.Log(this, $"{machine.Name} fails to read:{e.Message}");
                     }
                     finally
                     {
@@ -53,13 +55,13 @@ namespace MolyMade.FieldCommunication
                 }
                 else
                 {
-                    Tools.Log(this,$"{machine.Name} is quiet");
+                    Utilities.Log(this,$"{machine.Name} is quiet");
                     _blockingQuietQueue.Add(machine);
                 }
-                Thread.Sleep(100);
+                Thread.Sleep(_interval);
             }
             
-            Tools.Log(this,"Exit");
+            Utilities.Log(this,"Exit");
         }
 
     }

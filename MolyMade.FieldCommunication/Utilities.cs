@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace MolyMade.FieldCommunication
 {
-    static class Tools
+    static class Utilities
     {
         public static long GetUnixTimeStamp()
         {

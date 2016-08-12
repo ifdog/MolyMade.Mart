@@ -25,14 +25,21 @@ namespace MolyMade.FieldCommunication
         private readonly string _sysIniPath;
         private readonly string _serverIniPath;
         public event DataMountHandler DataMount;
+        private int _quietThreads;
+        private int _activeThreads;
+        private int _collectorthreads;
+        private int _quietThreadsInterval;
+        private int _activeThreadsInterval;
+        private int _secKey;
+
 
         public Comm(int warp = 1000, string sysIniPath = "Mart.ini", string serverIniPath = "Machines.ini")
         {
-            _runningtag = new RunningTag()
+            _runningtag = new RunningTag
             {
                 Value = true
             };
-            Tools.Log(this,"Created");
+            Utilities.Log(this,"Created");
             _sysIniPath = sysIniPath;
             _serverIniPath = serverIniPath;
             _warp = warp;
@@ -43,8 +50,9 @@ namespace MolyMade.FieldCommunication
             _runningtag.Value = true;
             Configurer c = new Configurer(_sysIniPath,_serverIniPath);
             _configurationData = c.Load();
-            _producer = new Producer(_configurationData.Machines,_valuesQueue,_messageQueue, _runningtag);
-            Tools.Log(this,"initlized");
+            TrySetValues();
+            _producer = new Producer(_configurationData.Machines,_valuesQueue,_messageQueue, _runningtag,_quietThreads,_activeThreads);
+            Utilities.Log(this,"initlized");
         }
 
         /// <summary>
@@ -84,19 +92,42 @@ namespace MolyMade.FieldCommunication
             _producer.Start();
         }
 
-        private void StartCollector(int collectorThreads = 1)
+        private void StartCollector()
         {
-            bool[] threads = new bool[collectorThreads];
+            bool[] threads = new bool[_collectorthreads];
             foreach (var b in threads)
             {
                 var collectorThread = new Thread(() =>
                 {
                     _collector = new Collector(_valuesQueue,_messageQueue,_runningtag,_warp);
-                    _collector.DataMount += DataMount;
+                    _collector.DataMount += this.DataMount;
                     _collector.Start();
                 })
                 { IsBackground = true };
                 collectorThread.Start();
+            }
+        }
+
+        private void TrySetValues()
+        {
+            _quietThreads = IntTrySetValueFromConfig("Settings", "QuietThreads", 1);
+            _activeThreads = IntTrySetValueFromConfig("Settings", "ActiveThreads", 3);
+            _collectorthreads = IntTrySetValueFromConfig("Settings", "CollectorThreads", 1);
+            _quietThreadsInterval = IntTrySetValueFromConfig("Settings", "QuietInterval",100);
+            _activeThreadsInterval = IntTrySetValueFromConfig("Settings", "ActiveInterval", 100);
+            _secKey = IntTrySetValueFromConfig("Settings", "Key", 1);
+        }
+
+        private int IntTrySetValueFromConfig(string section,string key,int defaultValue)
+        {
+            try
+            {
+                return int.Parse(_configurationData.System[section][key]);
+            }
+            catch (Exception e)
+            {
+                Utilities.Log(this, $"Error when reading config for {section}:{key}:{e.Message}");
+                return defaultValue;
             }
         }
     }

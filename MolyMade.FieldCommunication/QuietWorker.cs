@@ -14,18 +14,20 @@ namespace MolyMade.FieldCommunication
         private readonly BlockingCollection<Machine> _blockingActiveQueue;
         private readonly RunningTag _runningtag;
         public BlockingCollection<MessageItem> MessageQueue { get; }
+        private readonly int _interval;
 
         public QuietWorker(
             BlockingCollection<Machine> quietQueue,
             BlockingCollection<Machine> activeQueue,
             BlockingCollection<MessageItem> messageQueue,
-            RunningTag running)
+            RunningTag running, int interval = 100)
         {
             _blockqingQuietQueue = quietQueue;
             _blockingActiveQueue = activeQueue;
             this.MessageQueue = messageQueue;
             _runningtag = running;
-            Tools.Log(this,"created");
+            _interval = interval;
+            Utilities.Log(this,"created");
         }
 
         public void Start()
@@ -33,13 +35,18 @@ namespace MolyMade.FieldCommunication
             while (_runningtag.Value)
             {
                 Machine machine = _blockqingQuietQueue.Take();
+                if (!machine.Check())
+                {
+                    _blockqingQuietQueue.Add(machine);
+                    Utilities.Log(this,$"passed {machine.Name} wtih {machine.Failures} failures");
+                }
                 try
                 {
                     machine.Connect();
                 }
                 catch (Exception e)
                 {
-                    Tools.Log(this, $"{machine.Name} Fails to connect:{e.Message}");
+                    Utilities.Log(this, $"{machine.Name} Fails to connect:{e.Message}");
                 }
                 finally
                 {
@@ -49,13 +56,13 @@ namespace MolyMade.FieldCommunication
                     }
                     else
                     {
-                        Tools.Log(this, $"{machine.Name} is quiet");
+                        Utilities.Log(this, $"{machine.Name} is quiet");
                         _blockqingQuietQueue.Add(machine);
                     }
                 }
-                Thread.Sleep((machine.Failures*machine.Failures+1)*100);
+                Thread.Sleep(_interval);
             }
-            Tools.Log(this, "Exit");
+            Utilities.Log(this, "Exit");
         }
 
 

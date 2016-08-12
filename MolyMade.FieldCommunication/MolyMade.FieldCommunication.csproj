@@ -71,7 +71,7 @@
     <Compile Include="QuietWorker.cs" />
     <Compile Include="SocketWrapper.cs" />
     <Compile Include="TestMachine.cs" />
-    <Compile Include="Tools.cs" />
+    <Compile Include="Utilities.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Mart.ini">

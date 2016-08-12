@@ -42,8 +42,16 @@ namespace MolyMade.FieldCommunication
             {
                 throw new Exception("Already connected");
             }
-            _isconnected = true;
-            LastConnected = DateTime.Now;
+            if (Path.Contains('@'))
+            {
+                Thread.Sleep(1600);
+                _isconnected = true;
+                LastConnected = DateTime.Now;
+            }
+            else
+            {
+                throw new Exception("Connection Error");
+            }
         }
 
         public override void Disconnect()
@@ -59,7 +67,7 @@ namespace MolyMade.FieldCommunication
         {
             if (!_isconnected) { throw new Exception("Not connected");}
             Random r = new Random();
-            Thread.Sleep(88);
+            Thread.Sleep(40);
             Buffer = Tags.Keys
                 .Select(k => new KeyValuePair<string, string>(Tags[k], $"{r.NextDouble()}"))
                 .ToDictionary(kv => kv.Key, kv => kv.Value);
