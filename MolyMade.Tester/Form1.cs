@@ -15,11 +15,11 @@ namespace MolyMade.Tester
     public partial class Form1 : Form
     {
         private RunningTag _running = new RunningTag() {Value = true};
-        private Comm c;
+        private Communication c;
         public Form1()
         {
             InitializeComponent();
-            c = new Comm(10);
+            c = new Communication(10);
             c.DataMount += C_DataMount;
         }
 

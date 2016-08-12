@@ -60,7 +60,8 @@ namespace MolyMade.FieldCommunication
 
         public void Dispose()
         {
-            throw  new NotImplementedException();
+            SysIni = null;
+            ServersIni = null;
         }
     }
 }

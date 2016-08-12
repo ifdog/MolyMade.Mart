@@ -9,14 +9,14 @@ namespace MolyMade.FieldUI
 {
     class Controller
     {
-        private MolyMade.FieldCommunication.Comm _comm;
+        private readonly MolyMade.FieldCommunication.Communication _comm;
         public Dictionary<string,Dictionary<string,string>> MachinesValueDictionary = 
             new Dictionary<string, Dictionary<string, string>>();
        
 
         public Controller()
         {
-            _comm = new Comm(10);
+            _comm = new Communication(10);
             _comm.DataMount+= CommOnDataMount;
         }
 

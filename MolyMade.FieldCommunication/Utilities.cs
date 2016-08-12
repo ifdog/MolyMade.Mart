@@ -35,7 +35,6 @@ namespace MolyMade.FieldCommunication
             }
         }
         
-
         public static void Log(object sender,string message, int timeout = 50)
         {
             Ilog s = sender as Ilog;

@@ -16,7 +16,7 @@ namespace MolyMade.FieldCommunication
         private readonly BlockingCollection<Dictionary<string,string>> _blockingValuesQueue;
         private readonly RunningTag _runningtag;
         public BlockingCollection<MessageItem> MessageQueue { get; }
-        private int _interval;
+        private readonly int _interval;
 
         public ActiveWorker(BlockingCollection<Machine> blockingQuietQueue, 
             BlockingCollection<Machine> blockingActiveQueue, 

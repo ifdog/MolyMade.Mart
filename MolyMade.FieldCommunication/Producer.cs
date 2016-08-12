@@ -20,11 +20,15 @@ namespace MolyMade.FieldCommunication
         private readonly int _quietThreads;
         private readonly int _activeThreads;
         private readonly RunningTag _runningtag;
+        private int _quietThreadsInterval;
+        private int _activeThreadsInterval;
         public Producer(
             Dictionary<string,Dictionary<string,string>> machines,
             BlockingCollection<Dictionary<string,string>> valuesQueue, 
             BlockingCollection<MessageItem> messageQueue,
-            RunningTag running,
+            RunningTag running, 
+            int quietThreadsInterval = 100, 
+            int activeThreadsInterval= 100, 
             int quietThreads = 1, 
             int activeThreads = 1
           )
@@ -35,6 +39,8 @@ namespace MolyMade.FieldCommunication
             _quietThreads = quietThreads;
             _activeThreads = activeThreads;
             _runningtag = running;
+            _quietThreadsInterval = quietThreadsInterval;
+            _activeThreadsInterval = activeThreadsInterval;
         }
 
         public void Start()
@@ -42,8 +48,8 @@ namespace MolyMade.FieldCommunication
             List<Machine> machines = new List<Machine>();
             MachinesMake(_machinesDefinition,machines);
             QueuesInit(machines,out _quietQueue,out _activeQueue);
-            QuietWorker qw = new QuietWorker(_quietQueue,_activeQueue,_messageQueue, _runningtag);
-            ActiveWorker aw = new ActiveWorker(_quietQueue,_activeQueue,_valuesQueue,_messageQueue, _runningtag);
+            QuietWorker qw = new QuietWorker(_quietQueue,_activeQueue,_messageQueue, _runningtag,_quietThreadsInterval);
+            ActiveWorker aw = new ActiveWorker(_quietQueue,_activeQueue,_valuesQueue,_messageQueue, _runningtag,_activeThreadsInterval);
             bool[] quietThreads = new bool[_quietThreads];
             bool[] activeThreads = new bool[_activeThreads];
             foreach (bool b in quietThreads)

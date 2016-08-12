@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace MolyMade.FieldCommunication
 {
-    public class Comm:Ilog
+    public class Communication:Ilog
     {
         private Configurer.ConfigurationData _configurationData;
         private readonly BlockingCollection<MessageItem>_messageQueue = 
@@ -33,7 +33,7 @@ namespace MolyMade.FieldCommunication
         private int _secKey;
 
 
-        public Comm(int warp = 1000, string sysIniPath = "Mart.ini", string serverIniPath = "Machines.ini")
+        public Communication(int warp = 1000, string sysIniPath = "Mart.ini", string serverIniPath = "Machines.ini")
         {
             _runningtag = new RunningTag
             {
@@ -48,8 +48,10 @@ namespace MolyMade.FieldCommunication
         private void Init()
         {
             _runningtag.Value = true;
-            Configurer c = new Configurer(_sysIniPath,_serverIniPath);
-            _configurationData = c.Load();
+            using (Configurer c = new Configurer(_sysIniPath, _serverIniPath))
+            {
+                _configurationData = c.Load();
+            }
             TrySetValues();
             _producer = new Producer(_configurationData.Machines,_valuesQueue,_messageQueue, _runningtag,_quietThreads,_activeThreads);
             Utilities.Log(this,"initlized");

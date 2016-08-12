@@ -61,7 +61,7 @@
     <Compile Include="ActiveWorker.cs" />
     <Compile Include="Collector.cs" />
     <Compile Include="Configurer.cs" />
-    <Compile Include="Comm.cs" />
+    <Compile Include="Communication.cs" />
     <Compile Include="DataTypes.cs" />
     <Compile Include="Machine.cs" />
     <Compile Include="ModbusTcpMachine.cs" />

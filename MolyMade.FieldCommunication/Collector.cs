@@ -16,7 +16,6 @@ namespace MolyMade.FieldCommunication
         public event DataMountHandler DataMount ;
         private readonly int _valuesWarp;
         public BlockingCollection<MessageItem> MessageQueue { get; }
-
         public Collector(BlockingCollection<Dictionary<string,string>> valuesQueue,
             BlockingCollection<MessageItem> messageQueue,
             RunningTag running,
@@ -32,7 +31,7 @@ namespace MolyMade.FieldCommunication
         {
             while (_runningtag.Value)
             {
-                while (_buffer.Count < _valuesWarp && _runningtag.Value)
+                while (_buffer.Count < _valuesWarp&&_runningtag.Value)
                 {
                     _buffer.Add(_valuesQueue.Take());
                     Utilities.Log(this,$"Took {_valuesWarp} from ValuesQueue");
@@ -40,6 +39,7 @@ namespace MolyMade.FieldCommunication
                 DataMount?.Invoke(this,new DataMountEventArgs()
                 {
                     Tags = _buffer
+
                 });
                 _buffer.Clear();
             }
