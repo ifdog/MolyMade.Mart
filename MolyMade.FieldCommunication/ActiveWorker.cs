@@ -58,9 +58,9 @@ namespace MolyMade.FieldCommunication
                 }
                 Thread.Sleep(100);
             }
+            
             Tools.Log(this,"Exit");
         }
-
 
     }
 }

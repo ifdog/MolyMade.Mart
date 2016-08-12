@@ -22,21 +22,26 @@ namespace MolyMade.FieldCommunication
         private Collector _collector;
         public  BlockingCollection<MessageItem> MessageQueue => _messageQueue;
         private readonly int _warp;
+        private readonly string _sysIniPath;
+        private readonly string _serverIniPath;
         public event DataMountHandler DataMount;
 
-        public Comm(int warp = 1000)
+        public Comm(int warp = 1000, string sysIniPath = "Mart.ini", string serverIniPath = "Machines.ini")
         {
             _runningtag = new RunningTag()
             {
                 Value = true
             };
             Tools.Log(this,"Created");
+            _sysIniPath = sysIniPath;
+            _serverIniPath = serverIniPath;
             _warp = warp;
         }
 
         private void Init()
         {
-            Configurer c = new Configurer();
+            _runningtag.Value = true;
+            Configurer c = new Configurer(_sysIniPath,_serverIniPath);
             _configurationData = c.Load();
             _producer = new Producer(_configurationData.Machines,_valuesQueue,_messageQueue, _runningtag);
             Tools.Log(this,"initlized");
@@ -47,6 +52,14 @@ namespace MolyMade.FieldCommunication
         /// </summary>
         public void Start()
         {
+            if (_producer != null&&_collector!=null)
+            {
+                return;
+            }
+            if(_producer==null ^_collector==null)
+            {
+                this.Stop();
+            }
             Init();
             StartProducer();
             StartCollector();
@@ -57,7 +70,13 @@ namespace MolyMade.FieldCommunication
         /// </summary>
         public void Stop()
         {
+            if (_producer == null && _collector == null)
+            {
+                return;
+            }
             _runningtag.Value = false; //todo:Test.
+            _producer = null;
+            _collector = null;
         }
 
         private void StartProducer()

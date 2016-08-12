@@ -20,7 +20,7 @@ namespace MolyMade.FieldCommunication
             public Dictionary<string, Dictionary<string, string>> Machines;
         }
         
-        public Configurer(string sysIniPath = "Mart.ini",string serverIniPath="Machines.ini")
+        public Configurer(string sysIniPath,string serverIniPath)
         {
             this.SysIniPath = sysIniPath;
             this.ServerIniPath = serverIniPath;

@@ -39,16 +39,16 @@ namespace MolyMade.FieldCommunication
         {
             switch (type)
             {
+                case MachineTypes.Test:
+                    return new TestMachine(name, id, path, type, tags);
                 case MachineTypes.Opc:
                     return new OpcMachine(name,id,path,type,tags);
                 case MachineTypes.Modbus:
-                    return null;
-                case MachineTypes.Test:
-                    return new TestMachine(name,id,path,type,tags);
+                    return new ModbusTcpMachine(name,id,path,type,tags);
                 case MachineTypes.Other2:
                     return null;
                 default:
-                    return null;
+                    throw new NotImplementedException($"Type of machine {type.ToString()} not implemented");
             }
         }
 
@@ -89,6 +89,12 @@ namespace MolyMade.FieldCommunication
             return logArray;
         }
 
-        public virtual void Dispose(){}
+        public virtual void Dispose()
+        {
+            this.Disconnect();
+            this.Tags = null;
+            this.Buffer = null;
+            this.Logs = null;
+        }
     }
 }

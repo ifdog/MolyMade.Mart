@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace MolyMade.FieldCommunication
@@ -58,6 +59,7 @@ namespace MolyMade.FieldCommunication
         {
             if (!_isconnected) { throw new Exception("Not connected");}
             Random r = new Random();
+            Thread.Sleep(88);
             Buffer = Tags.Keys
                 .Select(k => new KeyValuePair<string, string>(Tags[k], $"{r.NextDouble()}"))
                 .ToDictionary(kv => kv.Key, kv => kv.Value);

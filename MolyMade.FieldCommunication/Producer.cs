@@ -46,14 +46,14 @@ namespace MolyMade.FieldCommunication
             QuietWorker qw = new QuietWorker(_quietQueue,_activeQueue,_messageQueue, _runningtag);
             ActiveWorker aw = new ActiveWorker(_quietQueue,_activeQueue,_valuesQueue,_messageQueue, _runningtag);
    
-            bool[] QuietThreads = new bool[_quietThreads];
-            bool[] ActiveThreads = new bool[_activeThreads];
-            foreach (bool b in QuietThreads)
+            bool[] quietThreads = new bool[_quietThreads];
+            bool[] activeThreads = new bool[_activeThreads];
+            foreach (bool b in quietThreads)
             {
                 Thread serverThread = new Thread(qw.Start) { IsBackground = true };
                 serverThread.Start();
             }
-            foreach (bool b in ActiveThreads)
+            foreach (bool b in activeThreads)
             {
                 Thread valuesThread = new Thread(aw.Start) { IsBackground = true };
                 valuesThread.Start();
