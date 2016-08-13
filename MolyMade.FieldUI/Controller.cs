@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -15,19 +16,27 @@ namespace MolyMade.FieldUI
             new Dictionary<string, Dictionary<string, string>>();
 
         private SynchronizationContext _uicontext;
-        private SendOrPostCallback _callback;
+        private SendOrPostCallback _valuesCallback;
+        private SendOrPostCallback _messageCallback;
 
-        public Controller(SynchronizationContext context,SendOrPostCallback callback)
+        public Controller(SynchronizationContext context,SendOrPostCallback valuesCallback,SendOrPostCallback messageCallback)
         {
-            _comm = new Communication(2);
+            _comm = new Communication(1);
             _comm.DataMount+= CommOnDataMount;
+            _comm.MessageArrive+= CommOnMessageArrive;
             _uicontext = context;
-            _callback = callback;
+            _valuesCallback = valuesCallback;
+            _messageCallback = messageCallback;
+        }
+
+        private void CommOnMessageArrive(object sender, MessageArriveArgs args)
+        {
+            _uicontext.Post(_messageCallback,args.Messages);
         }
 
         private void CommOnDataMount(object sender, DataMountEventArgs args)
         {
-            _uicontext.Send(_callback, args.Tags);
+            _uicontext.Post(_valuesCallback, args.Tags);
         }
 
         public void Start()
@@ -39,5 +48,6 @@ namespace MolyMade.FieldUI
         {
             _comm.Stop();
         }
+
     }
 }

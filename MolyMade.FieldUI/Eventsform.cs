@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using MolyMade.FieldCommunication;
 
 namespace MolyMade.FieldUI
 {
@@ -20,6 +21,11 @@ namespace MolyMade.FieldUI
         private void button1_Click(object sender, EventArgs e)
         {
             this.Close();
+        }
+
+        public void MessageUpdate(object sender,MessageArriveArgs e)
+        {
+            var x = e.Messages;
         }
     }
 }

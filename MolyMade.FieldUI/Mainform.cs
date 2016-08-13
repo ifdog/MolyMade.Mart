@@ -23,7 +23,7 @@ namespace MolyMade.FieldUI
         {
             InitializeComponent();
             _uiContext = SynchronizationContext.Current;
-            _controller = new Controller(_uiContext,DataUpdate);
+            _controller = new Controller(_uiContext,ValuesUpdate,MessageUpdate);
         }
 
         private void button3_Click(object sender, EventArgs e)
@@ -43,7 +43,7 @@ namespace MolyMade.FieldUI
             _controller.Stop();
         }
 
-        private void DataUpdate(object o)
+        private void ValuesUpdate(object o)
         {
             var x = o as List<Dictionary<string, string>>;
             x?.ForEach(dict =>
@@ -70,13 +70,19 @@ namespace MolyMade.FieldUI
                     dr[kv.Key] = kv.Value;
                 });
                 dataTables[name].Rows.Add(dr);
-                if (dataTables[name].Rows.Count > 20)
+                if (dataTables[name].Rows.Count > 30)
                 {
                     dataTables[name].Rows.RemoveAt(0);
                 }
             });
             
         }
+
+        private void MessageUpdate(object o)
+        {
+            
+        }
+
         public  void setDGV(DataGridView dgv)
         {
             Type dgvType = dgv.GetType();

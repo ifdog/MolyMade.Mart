@@ -8,6 +8,8 @@ namespace MolyMade.FieldCommunication
 {
     public delegate void DataMountHandler(object sender, DataMountEventArgs args);
 
+    public delegate void MessageArriveHandler(object sender,MessageArriveArgs args);
+
     public class RunningTag
     {
         public bool Value;
@@ -49,4 +51,8 @@ namespace MolyMade.FieldCommunication
         public List<Dictionary<string, string>> Tags;
     }
 
+    public class MessageArriveArgs : EventArgs
+    {
+        public List<MessageItem> Messages;
+    }
 }

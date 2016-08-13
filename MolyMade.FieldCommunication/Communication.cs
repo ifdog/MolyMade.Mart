@@ -19,12 +19,15 @@ namespace MolyMade.FieldCommunication
             new BlockingCollection<Dictionary<string, string>>(new ConcurrentQueue<Dictionary<string, string>>(), byte.MaxValue);
         private Producer _producer;
         private readonly RunningTag _runningtag;
-        private Collector _collector;
+        private ValuesCollector _valuesCollector;
+        private MessagesCollector _messagesCollector;
         public  BlockingCollection<MessageItem> MessageQueue => _messageQueue;
         private readonly int _warp;
         private readonly string _sysIniPath;
         private readonly string _serverIniPath;
         public event DataMountHandler DataMount;
+
+        public event MessageArriveHandler MessageArrive;
         private int _quietThreads;
         private int _activeThreads;
         private int _collectorthreads;
@@ -33,7 +36,10 @@ namespace MolyMade.FieldCommunication
         private int _secKey;
 
 
-        public Communication(int warp = 1000, string sysIniPath = "Mart.ini", string serverIniPath = "Machines.ini")
+        public Communication(int valueswarp = 1000,
+            int messagewarp=10, 
+            string sysIniPath = "Mart.ini",
+            string serverIniPath = "Machines.ini")
         {
             _runningtag = new RunningTag
             {
@@ -42,7 +48,7 @@ namespace MolyMade.FieldCommunication
             Utilities.Log(this,"Created");
             _sysIniPath = sysIniPath;
             _serverIniPath = serverIniPath;
-            _warp = warp;
+            _warp = valueswarp;
         }
 
         private void Init()
@@ -69,11 +75,11 @@ namespace MolyMade.FieldCommunication
         /// </summary>
         public void Start()
         {
-            if (_producer != null&&_collector!=null)
+            if (_producer != null&&_valuesCollector!=null)
             {
                 return;
             }
-            if(_producer==null ^_collector==null)
+            if(_producer==null ^_valuesCollector==null)
             {
                 this.Stop();
             }
@@ -87,13 +93,13 @@ namespace MolyMade.FieldCommunication
         /// </summary>
         public void Stop()
         {
-            if (_producer == null && _collector == null)
+            if (_producer == null && _valuesCollector == null)
             {
                 return;
             }
             _runningtag.Value = false; //todo:Test.
             _producer = null;
-            _collector = null;
+            _valuesCollector = null;
         }
 
         private void StartProducer()
@@ -108,13 +114,26 @@ namespace MolyMade.FieldCommunication
             {
                 var collectorThread = new Thread(() =>
                 {
-                    _collector = new Collector(_valuesQueue,_messageQueue,_runningtag,_warp);
-                    _collector.DataMount += this.DataMount;
-                    _collector.Start();
+                    _valuesCollector = new ValuesCollector(_valuesQueue,_messageQueue,_runningtag,_warp);
+                    _valuesCollector.DataMount += this.DataMount;
+                    _valuesCollector.Start();
                 })
-                { IsBackground = true };
+                {
+                    IsBackground = true 
+                
+                };
                 collectorThread.Start();
             }
+            var MessageCollectorThread = new Thread(() =>
+            {
+                _messagesCollector = new MessagesCollector(_messageQueue,_runningtag,1);
+                _messagesCollector.MessageArrive += this.MessageArrive;
+                _messagesCollector.Start();
+            })
+            {
+                IsBackground = true
+            };
+            MessageCollectorThread.Start();
         }
 
         private void TrySetValues()
