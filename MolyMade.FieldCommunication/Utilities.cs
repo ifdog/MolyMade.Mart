@@ -1,14 +1,17 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Runtime.Serialization;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace MolyMade.FieldCommunication
 {
-    static class Utilities
+    public static class Utilities
     {
         public static long GetUnixTimeStamp()
         {
@@ -47,5 +50,6 @@ namespace MolyMade.FieldCommunication
             };
             s.MessageQueue.TryAdd(item, timeout);
         }
+
     }
 }

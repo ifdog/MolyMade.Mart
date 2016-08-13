@@ -53,7 +53,14 @@ namespace MolyMade.FieldCommunication
                 _configurationData = c.Load();
             }
             TrySetValues();
-            _producer = new Producer(_configurationData.Machines,_valuesQueue,_messageQueue, _runningtag,_quietThreads,_activeThreads);
+            _producer = new Producer(_configurationData.Machines,
+                _valuesQueue,
+                _messageQueue, 
+                _runningtag,
+                _quietThreadsInterval,
+                _activeThreadsInterval,
+                 _quietThreads,
+                _activeThreads);
             Utilities.Log(this,"initlized");
         }
 

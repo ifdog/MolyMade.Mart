@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -44,37 +45,60 @@ namespace MolyMade.FieldUI
 
         private void DataUpdate(object o)
         {
-            Dictionary<string, Dictionary<string, string>> _dict= o as Dictionary<string, Dictionary<string, string>>;
-            foreach (string _name in _dict.Keys)
+            var x = o as List<Dictionary<string, string>>;
+            x?.ForEach(dict =>
             {
-                if (tabPages.ContainsKey(_name))
+                string name = dict["_Name"];
+                if (!dataTables.ContainsKey(name))
                 {
-                    dataTables[_name].Clear();
-                    dataTables[_name].Columns.Clear();
-                    dataTables[_name].Rows.Clear();
-                    foreach (string k in _dict[_name].Keys)
+                    tabPages[name] = new TabPage(name);
+                    tabControl1.TabPages.Add(tabPages[name]);
+                    dataGridViews[name] = new DataGridView();
+                    tabPages[name].Controls.Add(dataGridViews[name]);
+                    dataGridViews[name].Dock = DockStyle.Fill;
+                    setDGV(dataGridViews[name]);
+                    dataTables[name] = new DataTable(name);
+                    dataGridViews[name].DataSource = dataTables[name];
+                    dict.Keys.ToList().ForEach(k =>
                     {
-                        dataTables[_name].Columns.Add(k, typeof(string));
-                    }
-                    DataRow dr = dataTables[_name].NewRow();
-                    foreach (KeyValuePair<string, string> keyValuePair in _dict[_name])
-                    {
-                        dr[keyValuePair.Key] = keyValuePair.Value;
-                    }
-                    dataTables[_name].Rows.Add(dr);
+                        dataTables[name].Columns.Add(k);
+                    });
                 }
-                else
+                DataRow dr = dataTables[name].NewRow();
+                dict.ToList().ForEach(kv =>
                 {
-                    tabPages[_name] = new TabPage(_name);
-                    tabControl1.TabPages.Add(tabPages[_name]);
-                    dataGridViews[_name] = new DataGridView();
-                    tabPages[_name].Controls.Add(dataGridViews[_name]);
-                    dataGridViews[_name].Dock = DockStyle.Fill;
-                    dataTables[_name] = new DataTable(_name);
-                    dataGridViews[_name].DataSource = dataTables[_name];
+                    dr[kv.Key] = kv.Value;
+                });
+                dataTables[name].Rows.Add(dr);
+                if (dataTables[name].Rows.Count > 20)
+                {
+                    dataTables[name].Rows.RemoveAt(0);
                 }
-
-            }
+            });
+            
+        }
+        public  void setDGV(DataGridView dgv)
+        {
+            Type dgvType = dgv.GetType();
+            PropertyInfo pi = dgvType.GetProperty("DoubleBuffered",
+                  BindingFlags.Instance | BindingFlags.NonPublic);
+            pi.SetValue(dgv, true, null);
+            dgv.AllowUserToAddRows = false;
+            dgv.AllowUserToDeleteRows = false;
+            dgv.AllowUserToOrderColumns = false;
+            dgv.AllowUserToResizeRows = false;
+            dgv.AllowUserToResizeColumns = true;
+            dgv.ReadOnly = true;
+            dgv.AllowUserToOrderColumns = false;
+            dgv.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.DisplayedCells;
+            dgv.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.DisplayedCells;
+            dgv.BorderStyle = BorderStyle.FixedSingle;
+            dgv.CellBorderStyle = DataGridViewCellBorderStyle.Single;
+            //dgv.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dgv.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            dgv.RowHeadersVisible = false;
+            dgv.MultiSelect = false;
+            dgv.AllowUserToOrderColumns = true;
         }
     }
 }

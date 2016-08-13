@@ -19,7 +19,7 @@ namespace MolyMade.FieldUI
 
         public Controller(SynchronizationContext context,SendOrPostCallback callback)
         {
-            _comm = new Communication(10);
+            _comm = new Communication(2);
             _comm.DataMount+= CommOnDataMount;
             _uicontext = context;
             _callback = callback;
@@ -27,12 +27,7 @@ namespace MolyMade.FieldUI
 
         private void CommOnDataMount(object sender, DataMountEventArgs args)
         {
-            foreach (Dictionary<string,string> dict in args.Tags)
-            {
-                string _name = dict["_Name"];
-                MachinesValueDictionary[_name] = dict;
-            }
-            _uicontext.Post(_callback, MachinesValueDictionary);
+            _uicontext.Send(_callback, args.Tags);
         }
 
         public void Start()

@@ -48,4 +48,5 @@ namespace MolyMade.FieldCommunication
     {
         public List<Dictionary<string, string>> Tags;
     }
+
 }
