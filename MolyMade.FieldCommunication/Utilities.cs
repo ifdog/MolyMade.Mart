@@ -44,7 +44,7 @@ namespace MolyMade.FieldCommunication
             if (s == null) { return;}
             MessageItem item = new MessageItem()
             {
-                Time = DateTime.Now.ToShortTimeString(),
+                Time = DateTime.Now.ToLongTimeString(),
                 Message =  message,
                 Owner =  sender.GetType().Name,
                 ThreadId = Thread.CurrentThread.ManagedThreadId.ToString()

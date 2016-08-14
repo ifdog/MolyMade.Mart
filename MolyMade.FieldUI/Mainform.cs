@@ -58,13 +58,14 @@ namespace MolyMade.FieldUI
                     dataGridViews[name] = new DataGridView();
                     tabPages[name].Controls.Add(dataGridViews[name]);
                     dataGridViews[name].Dock = DockStyle.Fill;
-                    setDGV(dataGridViews[name]);
                     dataTables[name] = new DataTable(name);
                     dataGridViews[name].DataSource = dataTables[name];
+
                     dict.Keys.ToList().ForEach(k =>
                     {
                         dataTables[name].Columns.Add(k);
                     });
+                    SetDgv(dataGridViews[name]);
                 }
                 DataRow dr = dataTables[name].NewRow();
                 dict.ToList().ForEach(kv =>
@@ -82,7 +83,7 @@ namespace MolyMade.FieldUI
 
 
 
-        public  void setDGV(DataGridView dgv)
+        public  void SetDgv(DataGridView dgv)
         {
             Type dgvType = dgv.GetType();
             PropertyInfo pi = dgvType.GetProperty("DoubleBuffered",
@@ -104,6 +105,10 @@ namespace MolyMade.FieldUI
             dgv.RowHeadersVisible = false;
             dgv.MultiSelect = false;
             dgv.AllowUserToOrderColumns = true;
+            foreach (DataGridViewColumn column in dgv.Columns)
+            {
+                column.SortMode = DataGridViewColumnSortMode.NotSortable;
+            }
         }
     }
 }

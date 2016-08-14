@@ -22,7 +22,8 @@ namespace MolyMade.FieldCommunication
         private ValuesCollector _valuesCollector;
         private MessagesCollector _messagesCollector;
         public  BlockingCollection<MessageItem> MessageQueue => _messageQueue;
-        private readonly int _warp;
+        private readonly int _valueswarp;
+        private readonly int _messagewarp;
         private readonly string _sysIniPath;
         private readonly string _serverIniPath;
         public event DataMountHandler DataMount;
@@ -48,7 +49,8 @@ namespace MolyMade.FieldCommunication
             Utilities.Log(this,"Created");
             _sysIniPath = sysIniPath;
             _serverIniPath = serverIniPath;
-            _warp = valueswarp;
+            _valueswarp = valueswarp;
+            _messagewarp = messagewarp;
         }
 
         private void Init()
@@ -114,7 +116,7 @@ namespace MolyMade.FieldCommunication
             {
                 var collectorThread = new Thread(() =>
                 {
-                    _valuesCollector = new ValuesCollector(_valuesQueue,_messageQueue,_runningtag,_warp);
+                    _valuesCollector = new ValuesCollector(_valuesQueue,_messageQueue,_runningtag,_valueswarp);
                     _valuesCollector.DataMount += this.DataMount;
                     _valuesCollector.Start();
                 })
@@ -126,7 +128,7 @@ namespace MolyMade.FieldCommunication
             }
             var MessageCollectorThread = new Thread(() =>
             {
-                _messagesCollector = new MessagesCollector(_messageQueue,_runningtag,1);
+                _messagesCollector = new MessagesCollector(_messageQueue,_runningtag,_messagewarp);
                 _messagesCollector.MessageArrive += this.MessageArrive;
                 _messagesCollector.Start();
             })

@@ -26,7 +26,7 @@ namespace MolyMade.FieldUI
             SendOrPostCallback messageCallback
             )
         {
-            _comm = new Communication(1);
+            _comm = new Communication(2,1);
             _comm.DataMount+= CommOnDataMount;
             _comm.MessageArrive+= CommOnMessageArrive;
             _Mainformcontext = mainformcontext;

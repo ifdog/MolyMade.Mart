@@ -32,7 +32,7 @@ namespace MolyMade.FieldUI
         public void MessageUpdate(object o)
         {
             var x = o as List<MessageItem>;
-            var y = x?.Select(i => $"{i.Time}:{i.Owner}_{i.ThreadId}:{i.Message}").ToList();
+            var y = x?.Select(i => $"{i.Time.PadRight(10)}{i.Owner.PadRight(18)}{i.ThreadId.PadRight(5)}{i.Message}").ToList();
             y.ForEach(i =>
             {
                 listBox1.Items.Insert(0,i);
