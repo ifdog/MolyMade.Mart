@@ -97,7 +97,7 @@
             this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.MinimumSize = new System.Drawing.Size(639, 478);
             this.Name = "Mainform";
-            this.Text = "Form1";
+            this.Text = "Collected Values";
             this.ResumeLayout(false);
 
         }

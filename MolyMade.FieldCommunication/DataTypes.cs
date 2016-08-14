@@ -17,6 +17,7 @@ namespace MolyMade.FieldCommunication
 
     public struct MessageItem
     {
+        public string Time;
         public string Owner;
         public string ThreadId;
         public string Message;

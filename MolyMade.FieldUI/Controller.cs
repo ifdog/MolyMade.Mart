@@ -15,28 +15,34 @@ namespace MolyMade.FieldUI
         public Dictionary<string,Dictionary<string,string>> MachinesValueDictionary = 
             new Dictionary<string, Dictionary<string, string>>();
 
-        private SynchronizationContext _uicontext;
+        private SynchronizationContext _Mainformcontext;
+        private SynchronizationContext _Eventsformcontext;
         private SendOrPostCallback _valuesCallback;
         private SendOrPostCallback _messageCallback;
 
-        public Controller(SynchronizationContext context,SendOrPostCallback valuesCallback,SendOrPostCallback messageCallback)
+        public Controller(SynchronizationContext mainformcontext,
+            SynchronizationContext eventsformcontext,
+            SendOrPostCallback valuesCallback,
+            SendOrPostCallback messageCallback
+            )
         {
             _comm = new Communication(1);
             _comm.DataMount+= CommOnDataMount;
             _comm.MessageArrive+= CommOnMessageArrive;
-            _uicontext = context;
+            _Mainformcontext = mainformcontext;
             _valuesCallback = valuesCallback;
             _messageCallback = messageCallback;
+            _Eventsformcontext = eventsformcontext;
         }
 
         private void CommOnMessageArrive(object sender, MessageArriveArgs args)
         {
-            _uicontext.Post(_messageCallback,args.Messages);
+            _Eventsformcontext.Post(_messageCallback,args.Messages);
         }
 
         private void CommOnDataMount(object sender, DataMountEventArgs args)
         {
-            _uicontext.Post(_valuesCallback, args.Tags);
+            _Mainformcontext.Post(_valuesCallback, args.Tags);
         }
 
         public void Start()

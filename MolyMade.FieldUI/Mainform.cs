@@ -19,16 +19,18 @@ namespace MolyMade.FieldUI
         private Dictionary<string, TabPage> tabPages = new Dictionary<string, TabPage>();
         private Dictionary<string,DataGridView> dataGridViews = new Dictionary<string, DataGridView>();
         private Dictionary<string,DataTable> dataTables = new Dictionary<string, DataTable>();
+        public Eventsform eventsform;
         public Mainform()
         {
             InitializeComponent();
             _uiContext = SynchronizationContext.Current;
-            _controller = new Controller(_uiContext,ValuesUpdate,MessageUpdate);
+             eventsform= new Eventsform();
+            _controller = new Controller(_uiContext,eventsform._uiContext,ValuesUpdate,eventsform.MessageUpdate);
         }
 
         private void button3_Click(object sender, EventArgs e)
         {
-            Eventsform eventsform = new Eventsform();
+
             eventsform.Show();
         }
 
@@ -78,10 +80,7 @@ namespace MolyMade.FieldUI
             
         }
 
-        private void MessageUpdate(object o)
-        {
-            
-        }
+
 
         public  void setDGV(DataGridView dgv)
         {
