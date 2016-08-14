@@ -46,7 +46,7 @@ namespace MolyMade.FieldCommunication
             {
                 Time = DateTime.Now.ToShortTimeString(),
                 Message =  message,
-                Owner =  sender.GetType().ToString(),
+                Owner =  sender.GetType().Name,
                 ThreadId = Thread.CurrentThread.ManagedThreadId.ToString()
             };
             s.MessageQueue.TryAdd(item, timeout);

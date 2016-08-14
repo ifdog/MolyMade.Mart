@@ -38,11 +38,13 @@ namespace MolyMade.FieldCommunication
                 if (!machine.Check())
                 {
                     _blockqingQuietQueue.Add(machine);
-                    Utilities.Log(this,$"passed {machine.Name} wtih {machine.Failures} failures");
+                    //Utilities.Log(this,$"passed {machine.Name} wtih {machine.Failures} failures");
+                    continue;
                 }
                 try
                 {
                     machine.Connect();
+                    Utilities.Log(this, $"{machine.Name} connected");
                 }
                 catch (Exception e)
                 {

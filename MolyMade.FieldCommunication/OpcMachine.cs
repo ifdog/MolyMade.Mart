@@ -84,6 +84,21 @@ namespace MolyMade.FieldCommunication
             }
         }
 
+        public override bool Check()
+        {
+            if (Failures > 0)
+            {
+                if (_weighting == 0)
+                {
+                    _weighting = Failures*10;
+                    return true;
+                }
+                _weighting--;
+                return false;
+            }
+            return true;
+        }
+
         public override void Disconnect()
         {
             try

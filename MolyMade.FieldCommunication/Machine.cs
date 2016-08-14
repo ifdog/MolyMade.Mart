@@ -35,7 +35,7 @@ namespace MolyMade.FieldCommunication
         public abstract Dictionary<string,string> Buffer { get; protected set; }
         public abstract List<string> Logs { get; protected set; }
         public abstract string _lastMessage { get; protected set; }
-        private int _weighting = 0;
+        protected int _weighting = 0;
 
 
         public static Machine CreateInstance(string name, int id, string path, MachineTypes type, Dictionary<string, string> tags)
