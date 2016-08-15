@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
+using Modbus;
+using Modbus.Device;
 
 namespace MolyMade.FieldCommunication
 {
@@ -11,7 +14,9 @@ namespace MolyMade.FieldCommunication
         public override string Name { get; protected set; }
         public override int Id { get; protected set; }
         public override string Path { get; protected set; }
-        public override bool IsConnected { get { return this.socketWrapper.IsConnected; } }
+        public override bool IsConnected {
+            get { return _tcpClient.Connected; } 
+        }
         public override DateTime LastConnected { get; protected set; }
         public override DateTime LastRead { get; protected set; }
         public override int Failures { get; protected set; }
@@ -20,7 +25,9 @@ namespace MolyMade.FieldCommunication
         public override Dictionary<string, string> Buffer { get; protected set; }
         public override List<string> Logs { get; protected set; }
         public override string _lastMessage { get; protected set; }
-        private readonly SocketWrapper socketWrapper;
+        private TcpClient _tcpClient;
+        private ModbusIpMaster _modbusIpMaster;
+      
 
         public ModbusTcpMachine(string name, int id, string path, MachineTypes type, Dictionary<string, string> tags) : base(name, id, path, type, tags)
         {
@@ -29,34 +36,36 @@ namespace MolyMade.FieldCommunication
             this.Path = path;//"192.168.1.10:502
             this.Type = MachineTypes.Modbus;
             this.Tags = tags;
-            string[] pathStrings = this.Path.Split(':');
-            socketWrapper = new SocketWrapper(pathStrings[0].Trim(),int.Parse(pathStrings[1].Trim()),1000);
+            _tcpClient = new TcpClient();
+          
         }
 
         public override void Connect()
         {
-            if (!socketWrapper.IsConnected)
+            if (!IsConnected)
             {
-                socketWrapper.Connect();
+                _tcpClient.Connect(Path,502);
+                _modbusIpMaster = ModbusIpMaster.CreateIp(_tcpClient);
             }
         }
 
         public override void Disconnect()
         {
-            if (socketWrapper.IsConnected)
+            if (IsConnected)
             {
-                socketWrapper.Disconnect();
+                _tcpClient.Close();
             }
         }
 
         public override Dictionary<string, string> Read()
         {
-            throw new NotImplementedException();
+            //ushort[] imputs = _modbusIpMaster.ReadInputRegisters()
+            return null;
         }
 
         public override void Dispose()
         {
-            this.socketWrapper.Dispose();
+            
         }
     }
 }
