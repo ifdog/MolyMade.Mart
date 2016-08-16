@@ -101,13 +101,9 @@ namespace MolyMade.FieldCommunication
 
         public override void Disconnect()
         {
-            try
+            if (_server.IsConnected)
             {
-                _server.Disconnect();
-            }
-            catch (Exception e)
-            {
-                throw;
+               _server.Disconnect();
             }
         }
 
