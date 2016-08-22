@@ -7,7 +7,7 @@ using  TitaniumAS.Opc.Client.Common;
 
 namespace MolyMade.FieldCommunication
 {
-    class OpcMachine:Machine
+    class SinumerikMachine:Machine
     {
         private readonly Uri _url;
         private readonly OpcDaServer _server;
@@ -17,7 +17,12 @@ namespace MolyMade.FieldCommunication
         public override string Name { get; protected set; }
         public override int Id { get; protected set; }
         public override string Path { get; protected set; }
-        public override bool IsConnected => _server.IsConnected;
+        public override bool IsConnected
+        {
+            get { return _server.IsConnected; }
+            protected set {  }
+        }
+
         public override DateTime LastConnected { get; protected set; }
         public override DateTime LastRead { get; protected set; }
         public override int Failures { get; protected set; }
@@ -27,7 +32,7 @@ namespace MolyMade.FieldCommunication
         public override List<string> Logs { get; protected set; }
         public override string _lastMessage { get; protected set; }
 
-        public OpcMachine(string name, int id, string path, MachineTypes type,
+        public SinumerikMachine(string name, int id, string path, MachineTypes type,
             Dictionary<string, string> tags) : base(name, id, path, type, tags)
         {
             //path:"PCU50|OPC.SINUMERIK.Machineswitch"
@@ -38,6 +43,7 @@ namespace MolyMade.FieldCommunication
             }
             this._url = UrlBuilder.Build(urlStrings[0], urlStrings[1]);
             _server = new OpcDaServer(this._url);
+          
             _itemDefinitions = tags.Keys.Select(i => new OpcDaItemDefinition()
             {
                 ItemId = i.Trim(),

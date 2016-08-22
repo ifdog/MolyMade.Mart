@@ -35,7 +35,7 @@ namespace MolyMade.FieldCommunication
                 while (_buffer.Count < _valuesWarp&&_runningtag.Value)
                 {
                     _buffer.Add(_valuesQueue.Take());
-                    Utilities.Log(this,$"Took {_valuesWarp} from ValuesQueue");
+                    //Utilities.Log(this,$"Took {_valuesWarp} from ValuesQueue");
                 }
                 DataMount?.Invoke(this,new DataMountEventArgs()
                 {

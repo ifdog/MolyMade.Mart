@@ -73,8 +73,8 @@
     <Compile Include="Communication.cs" />
     <Compile Include="DataTypes.cs" />
     <Compile Include="Machine.cs" />
-    <Compile Include="ModbusTcpMachine.cs" />
-    <Compile Include="OpcMachine.cs" />
+    <Compile Include="MoxaMachine.cs" />
+    <Compile Include="SinumerikMachine.cs" />
     <Compile Include="Producer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="QuietWorker.cs" />

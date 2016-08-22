@@ -56,11 +56,13 @@ namespace MolyMade.FieldCommunication
             {
                 Thread serverThread = new Thread(qw.Start) { IsBackground = true };
                 serverThread.Start();
+                Thread.Sleep(_quietThreadsInterval / _quietThreads);
             }
             foreach (bool b in activeThreads)
             {
                 Thread valuesThread = new Thread(aw.Start) { IsBackground = true };
                 valuesThread.Start();
+                Thread.Sleep(_activeThreadsInterval/_activeThreads);
             }
         }
 

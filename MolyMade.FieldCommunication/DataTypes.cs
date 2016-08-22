@@ -25,11 +25,9 @@ namespace MolyMade.FieldCommunication
 
     public enum MachineTypes
     {
-        Test = 0, //a fake server,used for testing.
-        Opc = 1,  //OPC server
-        Modbus = 2, //Modbus TCP server,under construction.
-        Other = 3, //nothing
-        Other2 = 4 //nothing
+        Testing = 0, //a fake server,used for testing.
+        Siunmerik = 1,  //Sinumerik server
+        Moxa = 2, //Moxa module
     }
 
     public enum MachineState

@@ -13,7 +13,12 @@ namespace MolyMade.FieldCommunication
         public override string Name { get; protected set; }
         public override int Id { get; protected set; }
         public override string Path { get; protected set; }
-        public override bool IsConnected { get { return _isconnected; } }
+        public override bool IsConnected
+        {
+            get { return _isconnected; }
+            protected set { _isconnected = value; }
+        }
+
         public override DateTime LastConnected { get; protected set; }
         public override DateTime LastRead { get; protected set; }
         public override int Failures { get; protected set; }

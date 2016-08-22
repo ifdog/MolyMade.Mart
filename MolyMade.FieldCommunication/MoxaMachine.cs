@@ -3,20 +3,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Sockets;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Modbus;
 using Modbus.Device;
 
 namespace MolyMade.FieldCommunication
 {
-    public class ModbusTcpMachine:Machine
+    public class MoxaMachine:Machine
     {
         public override string Name { get; protected set; }
         public override int Id { get; protected set; }
         public override string Path { get; protected set; }
-        public override bool IsConnected {
-            get { return _tcpClient.Connected; } 
-        }
+        public override bool IsConnected { get; protected set; }
         public override DateTime LastConnected { get; protected set; }
         public override DateTime LastRead { get; protected set; }
         public override int Failures { get; protected set; }
@@ -28,18 +27,18 @@ namespace MolyMade.FieldCommunication
         private TcpClient _tcpClient;
         private ModbusIpMaster _modbusIpMaster;
         private Dictionary<string, string> _innerBuffer =new Dictionary<string, string>(); 
+        private ManualResetEvent _manualResetEvent = new ManualResetEvent(false);
+        private int _tcpclienttimeout = 1000;
       
 
-        public ModbusTcpMachine(string name, int id, string path, MachineTypes type, Dictionary<string, string> tags) : base(name, id, path, type, tags)
+        public MoxaMachine(string name, int id, string path, MachineTypes type, Dictionary<string, string> tags) : base(name, id, path, type, tags)
         {
             this.Name = name;
             this.Id = id;
             this.Path = path;//"192.168.1.10
-            this.Type = MachineTypes.Modbus;
+            this.Type = MachineTypes.Moxa;
             this.Tags = tags;
-            _tcpClient = new TcpClient();
-            _tcpClient.ReceiveTimeout = 1000;
-            _tcpClient.SendTimeout = 1000;
+
 
         }
 
@@ -49,7 +48,10 @@ namespace MolyMade.FieldCommunication
             {
                 try
                 {
-                    _tcpClient.Connect(Path, 502);
+                    _tcpClient = new TcpClient();
+                    _tcpClient.ReceiveTimeout = 500;
+                    _tcpClient.SendTimeout = 500;
+                    ConnectWithTimeout(_tcpclienttimeout);
                     _modbusIpMaster = ModbusIpMaster.CreateIp(_tcpClient);
                     LastConnected = DateTime.Now;
                     Failures = 0;
@@ -62,17 +64,55 @@ namespace MolyMade.FieldCommunication
             }
         }
 
+        public void ConnectWithTimeout(int timeout)
+        {
+            _manualResetEvent.Reset();
+            _tcpClient.BeginConnect(Path, 502, ConnectCallback, _tcpClient);
+            if (_manualResetEvent.WaitOne(3000, false))
+            {
+                IsConnected = true;
+            }
+            else
+            {
+                _tcpClient.Close();
+                IsConnected = false;
+                throw new TimeoutException();
+            }
+        }
+
+        public void ConnectCallback(IAsyncResult iAsyncResult)
+        {
+            try
+            {
+                TcpClient _tcpClient = iAsyncResult as TcpClient;
+                _tcpClient?.EndConnect(iAsyncResult);
+            }
+            catch (Exception e)
+            {
+                throw;
+            }
+            finally
+            {
+                _manualResetEvent.Set();
+            }
+        }
+
         public override void Disconnect()
         {
             if (IsConnected)
             {
                 _modbusIpMaster.Dispose();
                 _tcpClient.Close();
+                IsConnected = false;
             }
         }
 
         public override Dictionary<string, string> Read()
         {
+            if (!IsConnected)
+            {
+                throw new Exception("disconnected!");
+            }
             ushort[] dis;
             ushort[] ais;
             List<byte> bytes = new List<byte>();
@@ -83,6 +123,8 @@ namespace MolyMade.FieldCommunication
             }
             catch (Exception e)
             {
+                IsConnected = false;
+                _tcpClient.Client.Close();
                 Utilities.Log(this, e.Message);
                 throw;
             }

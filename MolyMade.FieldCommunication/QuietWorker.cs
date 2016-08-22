@@ -48,7 +48,7 @@ namespace MolyMade.FieldCommunication
                 }
                 catch (Exception e)
                 {
-                    Utilities.Log(this, $"{machine.Name} Fails to connect:{e.Message}");
+                    Utilities.Log(this, $"{machine.Name} Fails to connect:{e.Message}({machine.Failures})");
                 }
                 finally
                 {

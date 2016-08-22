@@ -26,7 +26,7 @@ namespace MolyMade.FieldCommunication
         public abstract string Name { get; protected set; }
         public abstract int Id { get; protected set; }
         public abstract string Path { get; protected set; }
-        public abstract bool IsConnected { get;}
+        public abstract bool IsConnected { get; protected set; }
         public abstract DateTime LastConnected { get; protected set; }
         public abstract DateTime LastRead { get; protected set; }
         public abstract int Failures { get; protected set; }
@@ -42,14 +42,12 @@ namespace MolyMade.FieldCommunication
         {
             switch (type)
             {
-                case MachineTypes.Test:
+                case MachineTypes.Testing:
                     return new TestMachine(name, id, path, type, tags);
-                case MachineTypes.Opc:
-                    return new OpcMachine(name,id,path,type,tags);
-                case MachineTypes.Modbus:
-                    return new ModbusTcpMachine(name,id,path,type,tags);
-                case MachineTypes.Other2:
-                    return null;
+                case MachineTypes.Siunmerik:
+                    return new SinumerikMachine(name,id,path,type,tags);
+                case MachineTypes.Moxa:
+                    return new MoxaMachine(name,id,path,type,tags);
                 default:
                     throw new NotImplementedException($"Type of machine {type.ToString()} not implemented");
             }
