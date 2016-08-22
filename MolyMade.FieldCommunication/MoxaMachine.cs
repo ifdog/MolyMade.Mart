@@ -29,6 +29,8 @@ namespace MolyMade.FieldCommunication
         private Dictionary<string, string> _innerBuffer =new Dictionary<string, string>(); 
         private ManualResetEvent _manualResetEvent = new ManualResetEvent(false);
         private int _tcpclienttimeout = 1000;
+        private string[] _td = {"DI0","DI1","DI2","DI3","DIO0","DIO1","DIO2","DIO3"};
+        private string[] _ta = {"AI0","AI1","AI2","AI3"};
       
 
         public MoxaMachine(string name, int id, string path, MachineTypes type, Dictionary<string, string> tags) : base(name, id, path, type, tags)
@@ -84,12 +86,8 @@ namespace MolyMade.FieldCommunication
         {
             try
             {
-                TcpClient _tcpClient = iAsyncResult as TcpClient;
-                _tcpClient?.EndConnect(iAsyncResult);
-            }
-            catch (Exception e)
-            {
-                throw;
+                TcpClient tcpClient = iAsyncResult as TcpClient;
+                tcpClient?.EndConnect(iAsyncResult);
             }
             finally
             {
@@ -130,14 +128,10 @@ namespace MolyMade.FieldCommunication
             }
             if (dis?.Length == 1)
             {
-                _innerBuffer["DI0"] = (1 & dis[0]).ToString();
-                _innerBuffer["DI1"] = (1 & (dis[0]>>1)).ToString();
-                _innerBuffer["DI2"] = (1 & (dis[0]>>2)).ToString();
-                _innerBuffer["DI3"] = (1 & (dis[0]>>3)).ToString();
-                _innerBuffer["DIO0"] = (1 & (dis[0]>>4)).ToString();
-                _innerBuffer["DIO1"] = (1 & (dis[0]>>5)).ToString();
-                _innerBuffer["DIO2"] = (1 & (dis[0]>>6)).ToString();
-                _innerBuffer["DIO3"] = (1 & (dis[0]>>7)).ToString();
+                for (int i = 0; i < 8; i++)
+                {
+                    _innerBuffer[_td[i]]= (1 & (dis[0] >> i)).ToString();
+                }
             }
             if (ais?.Length==8)
             {
@@ -147,11 +141,10 @@ namespace MolyMade.FieldCommunication
                     bytes.Add(Convert.ToByte((v>>8)&byte.MaxValue));
                 }
                 var x = bytes.ToArray();
-                
-                _innerBuffer["AI0"] = BitConverter.ToSingle(x, 0).ToString();
-                _innerBuffer["AI1"] = BitConverter.ToSingle(x, 4).ToString();
-                _innerBuffer["AI2"] = BitConverter.ToSingle(x, 8).ToString();
-                _innerBuffer["AI3"] = BitConverter.ToSingle(x, 12).ToString();
+                for (int i = 0; i < 4; i++)
+                {
+                    _innerBuffer[_ta[i]] = BitConverter.ToSingle(x, 4*i).ToString();
+                }
             }
             foreach (var key in Tags.Keys)
             {
