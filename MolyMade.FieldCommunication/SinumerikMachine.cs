@@ -7,7 +7,7 @@ using  TitaniumAS.Opc.Client.Common;
 
 namespace MolyMade.FieldCommunication
 {
-    class SinumerikMachine:Machine
+    public sealed class SinumerikMachine:Machine
     {
         private readonly Uri _url;
         private readonly OpcDaServer _server;
@@ -30,7 +30,8 @@ namespace MolyMade.FieldCommunication
         public override Dictionary<string, string> Tags { get; protected set; }
         public override Dictionary<string, string> Buffer { get; protected set; }
         public override List<string> Logs { get; protected set; }
-        public override string _lastMessage { get; protected set; }
+        public override string LastMessage { get; protected set; }
+        public override int ReadErrors { get; protected set; }
 
         public SinumerikMachine(string name, int id, string path, MachineTypes type,
             Dictionary<string, string> tags) : base(name, id, path, type, tags)
@@ -85,7 +86,7 @@ namespace MolyMade.FieldCommunication
             catch (Exception e)
             {
                 Log(e.Message);
-
+                ReadErrors = ReadErrors > 10 ? 10 : ReadErrors + 1;
                 throw;
             }
         }
@@ -94,12 +95,12 @@ namespace MolyMade.FieldCommunication
         {
             if (Failures > 0)
             {
-                if (_weighting == 0)
+                if (Weighting == 0)
                 {
-                    _weighting = Failures*10;
+                    Weighting = Failures*10;
                     return true;
                 }
-                _weighting--;
+                Weighting--;
                 return false;
             }
             return true;
@@ -110,6 +111,7 @@ namespace MolyMade.FieldCommunication
             if (_server.IsConnected)
             {
                _server.Disconnect();
+                ReadErrors = 0;
             }
         }
 

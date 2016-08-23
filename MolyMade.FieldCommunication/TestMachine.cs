@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace MolyMade.FieldCommunication
 {
-    public class TestMachine:Machine
+    public sealed class TestMachine:Machine
     {
         private bool _isconnected = false;
         public override string Name { get; protected set; }
@@ -26,7 +26,8 @@ namespace MolyMade.FieldCommunication
         public override Dictionary<string, string> Tags { get; protected set; }
         public override Dictionary<string, string> Buffer { get; protected set; }
         public override List<string> Logs { get; protected set; }
-        public override string _lastMessage { get; protected set; }
+        public override string LastMessage { get; protected set; }
+        public override int ReadErrors { get; protected set; }
 
         public TestMachine(
             string name, 

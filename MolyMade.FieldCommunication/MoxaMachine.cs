@@ -10,7 +10,7 @@ using Modbus.Device;
 
 namespace MolyMade.FieldCommunication
 {
-    public class MoxaMachine:Machine
+    public sealed class MoxaMachine:Machine
     {
         public override string Name { get; protected set; }
         public override int Id { get; protected set; }
@@ -23,7 +23,8 @@ namespace MolyMade.FieldCommunication
         public override Dictionary<string, string> Tags { get; protected set; }
         public override Dictionary<string, string> Buffer { get; protected set; }
         public override List<string> Logs { get; protected set; }
-        public override string _lastMessage { get; protected set; }
+        public override string LastMessage { get; protected set; }
+        public override int ReadErrors { get; protected set; }
         private TcpClient _tcpClient;
         private ModbusIpMaster _modbusIpMaster;
         private Dictionary<string, string> _innerBuffer =new Dictionary<string, string>(); 
@@ -33,7 +34,7 @@ namespace MolyMade.FieldCommunication
         private string[] _ta = {"AI0","AI1","AI2","AI3"};
       
 
-        public MoxaMachine(string name, int id, string path, MachineTypes type, Dictionary<string, string> tags) : base(name, id, path, type, tags)
+        public  MoxaMachine(string name, int id, string path, MachineTypes type, Dictionary<string, string> tags) : base(name, id, path, type, tags)
         {
             this.Name = name;
             this.Id = id;
@@ -50,9 +51,11 @@ namespace MolyMade.FieldCommunication
             {
                 try
                 {
-                    _tcpClient = new TcpClient();
-                    _tcpClient.ReceiveTimeout = 500;
-                    _tcpClient.SendTimeout = 500;
+                    _tcpClient = new TcpClient
+                    {
+                        ReceiveTimeout = 500,
+                        SendTimeout = 500
+                    };
                     ConnectWithTimeout(_tcpclienttimeout);
                     _modbusIpMaster = ModbusIpMaster.CreateIp(_tcpClient);
                     LastConnected = DateTime.Now;
@@ -97,12 +100,12 @@ namespace MolyMade.FieldCommunication
 
         public override void Disconnect()
         {
-            if (IsConnected)
-            {
-                _modbusIpMaster.Dispose();
-                _tcpClient.Close();
-                IsConnected = false;
-            }
+            if (!IsConnected) return;
+            _tcpClient?.Client?.Close();
+            _tcpClient?.Close();
+            _modbusIpMaster?.Dispose();
+            IsConnected = false;
+            ReadErrors = 0;
         }
 
         public override Dictionary<string, string> Read()
@@ -121,8 +124,7 @@ namespace MolyMade.FieldCommunication
             }
             catch (Exception e)
             {
-                IsConnected = false;
-                _tcpClient.Client.Close();
+                ReadErrors = ReadErrors > 10 ? 10 : ReadErrors + 1;
                 Utilities.Log(this, e.Message);
                 throw;
             }

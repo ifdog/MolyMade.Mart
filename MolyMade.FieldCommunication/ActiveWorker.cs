@@ -17,18 +17,20 @@ namespace MolyMade.FieldCommunication
         private readonly RunningTag _runningtag;
         public BlockingCollection<MessageItem> MessageQueue { get; }
         private readonly int _interval;
+        private readonly int _readRetry;
 
         public ActiveWorker(BlockingCollection<Machine> blockingQuietQueue, 
             BlockingCollection<Machine> blockingActiveQueue, 
             BlockingCollection<Dictionary<string,string>> blockingServerValuesQueue, 
             BlockingCollection<MessageItem> messageQueue,
-            RunningTag running, int interval=100)
+            RunningTag running, int readRetry, int interval=100)
         {
             _blockingQuietQueue = blockingQuietQueue;
             _blockingActiveQueue = blockingActiveQueue;
             _blockingValuesQueue = blockingServerValuesQueue;
             MessageQueue = messageQueue;
             _runningtag = running;
+            _readRetry = readRetry;
             _interval = interval;
             Utilities.Log(this,"Created");
         }
@@ -50,7 +52,15 @@ namespace MolyMade.FieldCommunication
                     }
                     finally
                     {
-                        _blockingActiveQueue.Add(machine);
+                        if (machine.ReadErrors >= _readRetry)
+                        {
+                            machine.Disconnect();
+                            _blockingQuietQueue.Add(machine);
+                        }
+                        else
+                        {
+                            _blockingActiveQueue.Add(machine);
+                        }
                     }
                 }
                 else

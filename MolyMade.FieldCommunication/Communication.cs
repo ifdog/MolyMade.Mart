@@ -35,6 +35,7 @@ namespace MolyMade.FieldCommunication
         private int _quietThreadsInterval;
         private int _activeThreadsInterval;
         private int _secKey;
+        private int _readRetry;
 
 
         public Communication(int valueswarp = 1000,
@@ -65,6 +66,7 @@ namespace MolyMade.FieldCommunication
                 _valuesQueue,
                 _messageQueue, 
                 _runningtag,
+                _readRetry,
                 _quietThreadsInterval,
                 _activeThreadsInterval,
                  _quietThreads,
@@ -146,6 +148,7 @@ namespace MolyMade.FieldCommunication
             _quietThreadsInterval = IntTrySetValueFromConfig("Settings", "QuietInterval",100);
             _activeThreadsInterval = IntTrySetValueFromConfig("Settings", "ActiveInterval", 100);
             _secKey = IntTrySetValueFromConfig("Settings", "Key", 1);
+            _readRetry = IntTrySetValueFromConfig("Settings", "ReadRetry", 3);
         }
 
         private int IntTrySetValueFromConfig(string section,string key,int defaultValue)

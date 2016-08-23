@@ -34,8 +34,9 @@ namespace MolyMade.FieldCommunication
         public abstract Dictionary<string,string> Tags { get; protected set; }
         public abstract Dictionary<string,string> Buffer { get; protected set; }
         public abstract List<string> Logs { get; protected set; }
-        public abstract string _lastMessage { get; protected set; }
-        protected int _weighting = 0;
+        public abstract string LastMessage { get; protected set; }
+        public abstract int ReadErrors { get; protected set; }
+        protected int Weighting = 0;
 
 
         public static Machine CreateInstance(string name, int id, string path, MachineTypes type, Dictionary<string, string> tags)
@@ -80,19 +81,19 @@ namespace MolyMade.FieldCommunication
             Buffer["_LastConnected"] = this.LastConnected.ToString(CultureInfo.InvariantCulture);
             Buffer["_LastRead"] = this.LastRead.ToString(CultureInfo.InvariantCulture);
             Buffer["_Failures"] = this.Failures.ToString();
-            Buffer["_LastMessage"] = this._lastMessage;
+            Buffer["_LastMessage"] = this.LastMessage;
         }
 
         public virtual bool Check()
         {
             if (Failures > 0)
             {
-                if (_weighting == 0)
+                if (Weighting == 0)
                 {
-                    _weighting = Failures;
+                    Weighting = Failures;
                     return true;
                 }
-                _weighting--;
+                Weighting--;
                 return false;
             }
             return true;
