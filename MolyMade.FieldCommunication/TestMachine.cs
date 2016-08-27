@@ -48,7 +48,7 @@ namespace MolyMade.FieldCommunication
             {
                 throw new Exception("Already connected");
             }
-            if (Path.Contains('@'))
+            if (Path.Split('@').Length==2)
             {
                 Thread.Sleep(200);
                 _isconnected = true;
