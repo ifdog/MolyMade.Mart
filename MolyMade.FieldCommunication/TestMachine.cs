@@ -75,7 +75,7 @@ namespace MolyMade.FieldCommunication
             Random r = new Random();
             Thread.Sleep(40);
             Buffer = Tags.Keys
-                .Select(k => new KeyValuePair<string, string>(Tags[k], $"{r.NextDouble()}"))
+                .Select(k => new KeyValuePair<string, string>(Tags[k], $"{r.Next()}"))
                 .ToDictionary(kv => kv.Key, kv => kv.Value);
             Addtags();
             LastRead = DateTime.Now;
